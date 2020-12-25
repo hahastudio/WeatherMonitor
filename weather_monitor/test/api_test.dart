@@ -25,7 +25,19 @@ Future main() async {
 
     test('Test OpenWeatherMap onecall api', () async {
       var apiClient = OpenWeatherMapWeatherApi(apiKey: apiKey, httpClient: httpClient);
-      var weather = await apiClient.getWeather(Location(latitude: 0, longitude: 0));
+      var weather = await apiClient.getOverAllWeather(Location(latitude: 0, longitude: 0));
+      printObject(weather.toJson());
+    });
+
+    test('Test OpenWeatherMap weather api', () async {
+      var apiClient = OpenWeatherMapWeatherApi(apiKey: apiKey, httpClient: httpClient);
+      var weather = await apiClient.getCurrentWeather('Shanghai');
+      printObject(weather.toJson());
+    });
+
+    test('Test OpenWeatherMap forecast api', () async {
+      var apiClient = OpenWeatherMapWeatherApi(apiKey: apiKey, httpClient: httpClient);
+      var weather = await apiClient.getForecastWeather('Shanghai');
       printObject(weather.toJson());
     });
   });

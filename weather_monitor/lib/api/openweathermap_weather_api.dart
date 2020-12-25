@@ -17,12 +17,12 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
 
   @override
   Future<Location> getLocation(String city) async {
-    // TODO: implement getLocation
+    // TODO: read city.list.min.json and query location with city name
     throw UnimplementedError();
   }
 
   @override
-  Future<OverAllWeather> getWeather(Location location) async {
+  Future<OverAllWeather> getOverAllWeather(Location location) async {
     var queryParameters = {
       'lat': location.latitude.toString(),
       'lon': location.longitude.toString(),
@@ -37,6 +37,38 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
     }
 
     return OverAllWeather.fromJson(jsonDecode(response.body));
+  }
+
+  @override
+  Future<CurrentWeather> getCurrentWeather(String city) async {
+    var queryParameters = {
+      'q': city,
+      'appid': apiKey
+    };
+    final uri = Uri.https(endPointHost, endPointPrefix + '/weather', queryParameters);
+    var response = await this.httpClient.get(uri);
+
+    if (response.statusCode != 200) {
+      throw Exception('error retrieving weather: status ${response.statusCode}');
+    }
+
+    return CurrentWeather.fromJson(jsonDecode(response.body));
+  }
+
+  @override
+  Future<ForecastStat> getForecastWeather(String city) async {
+    var queryParameters = {
+      'q': city,
+      'appid': apiKey
+    };
+    final uri = Uri.https(endPointHost, endPointPrefix + '/forecast', queryParameters);
+    var response = await this.httpClient.get(uri);
+
+    if (response.statusCode != 200) {
+      throw Exception('error retrieving weather: status ${response.statusCode}');
+    }
+
+    return ForecastStat.fromJson(jsonDecode(response.body));
   }
 
 }
