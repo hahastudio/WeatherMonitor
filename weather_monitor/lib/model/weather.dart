@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:weather_monitor/util/typeconverter.dart';
+import 'package:weather_monitor/util/weather_icon_map.dart';
 
 /// Overall weather details from https://openweathermap.org/api/one-call-api
 class OverAllWeather {
@@ -76,9 +78,9 @@ class OverAllWeather {
 class Weather {
   /// time, UTC
   DateTime dt;
-  /// (where available) Sunrise time, UTC
+  /// (in current) Sunrise time, UTC
   DateTime sunrise;
-  /// (where available) Sunset time, UTC
+  /// (in current) Sunset time, UTC
   DateTime sunset;
   /// Units - default: kelvin, metric: Celsius, imperial: Fahrenheit.
   Temperature temp;
@@ -104,15 +106,15 @@ class Weather {
   double visibility;
   /// Wind details
   Wind wind;
-  /// (where available) Probability of precipitation
+  /// (in forecasts) Probability of precipitation
   double probability;
-  /// (where available) Precipitation volume, mm
+  /// (where available, in forecasts) Precipitation volume, mm
   double rain;
-  /// (where available) Rain volume precipitations
+  /// (where available, in current) Rain volume precipitations
   Rain rainVolumes;
-  /// (where available) Snow volume, mm
+  /// (where available, in forecasts) Snow volume, mm
   double snow;
-  /// (where available) Snow volume precipitations
+  /// (where available, in current) Snow volume precipitations
   Snow snowVolumes;
   /// Weather condition
   WeatherCondition weather;
@@ -398,6 +400,32 @@ class WeatherCondition {
     'description': description,
     'icon': icon
   };
+
+  IconData getIconData(){
+    switch(this.icon){
+      case '01d': return WeatherIcons.clear_day;
+      case '01n': return WeatherIcons.clear_night;
+      case '02d': return WeatherIcons.few_clouds_day;
+      case '02n': return WeatherIcons.few_clouds_day;
+      case '03d':
+      case '04d':
+        return WeatherIcons.clouds_day;
+      case '03n':
+      case '04n':
+        return WeatherIcons.clear_night;
+      case '09d': return WeatherIcons.shower_rain_day;
+      case '09n': return WeatherIcons.shower_rain_night;
+      case '10d': return WeatherIcons.rain_day;
+      case '10n': return WeatherIcons.rain_night;
+      case '11d': return WeatherIcons.thunder_storm_day;
+      case '11n': return WeatherIcons.thunder_storm_night;
+      case '13d': return WeatherIcons.snow_day;
+      case '13n': return WeatherIcons.snow_night;
+      case '50d': return WeatherIcons.mist_day;
+      case '50n': return WeatherIcons.mist_night;
+      default: return WeatherIcons.clear_day;
+    }
+  }
 }
 
 /// Temperature Stats for a day

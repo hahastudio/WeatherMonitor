@@ -63,12 +63,26 @@ class _WeatherWidgetState extends State<WeatherWidget> {
               return RefreshIndicator(
                 onRefresh: () {
                   BlocProvider.of<WeatherBloc>(context).add(
-                    WeatherRefreshRequested(city: state.weather.city),
+                    WeatherRefreshRequested(city: weather.city),
                   );
                   return _refreshCompleter.future;
                 },
                 child: ListView(
                   children: <Widget>[
+                    LastUpdatedWidget(lastUpdatedOn: weather.current.dt),
+                    SizedBox(height: 5),
+                    LocationWidget(
+                      longitude: weather.longitude,
+                      latitude: weather.latitude,
+                      city: weather.city,
+                    ),
+                    SizedBox(height: 50),
+                    WeatherSummaryWidget(
+                      condition: weather.current.weather,
+                      temp: weather.current.temp.celsius,
+                      feelsLike: weather.current.feelsLike.celsius,
+                    ),
+                    SizedBox(height: 20),
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 50.0),
                       child: Center(
