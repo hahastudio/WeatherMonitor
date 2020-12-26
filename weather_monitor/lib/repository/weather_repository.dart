@@ -7,7 +7,9 @@ class WeatherRepository {
 
   Future<OverAllWeather> getOverAllWeather(String city) async {
     var location = await weatherApi.getLocation(city);
-    return await weatherApi.getOverAllWeather(location);
+    var weather = await weatherApi.getOverAllWeather(location);
+    weather.city = city;
+    return weather;
   }
 
   Future<CurrentWeather> getCurrentWeather(String city) async {

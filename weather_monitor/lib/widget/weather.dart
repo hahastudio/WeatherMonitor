@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_monitor/bloc/blocs.dart';
@@ -5,12 +6,24 @@ import 'package:weather_monitor/model/models.dart';
 import 'package:weather_monitor/widget/widgets.dart';
 
 
-class Weather extends StatelessWidget {
+class WeatherWidget extends StatefulWidget {
+  State<WeatherWidget> createState() => _WeatherWidgetState();
+}
+
+class _WeatherWidgetState extends State<WeatherWidget> {
+  Completer<void> _refreshCompleter;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshCompleter = Completer<void>();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter Weather'),
+        title: Text('Weather Monitor'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
@@ -18,7 +31,7 @@ class Weather extends StatelessWidget {
               final city = await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CitySelection(),
+                  builder: (context) => CitySelectionWidget(),
                 ),
               );
               if (city != null) {
@@ -30,7 +43,13 @@ class Weather extends StatelessWidget {
         ],
       ),
       body: Center(
-        child: BlocBuilder<WeatherBloc, WeatherState>(
+        child: BlocConsumer<WeatherBloc, WeatherState>(
+          listener: (context, state) {
+            if (state is WeatherLoadSuccess) {
+              _refreshCompleter?.complete();
+              _refreshCompleter = Completer();
+            }
+          },
           builder: (context, state) {
             if (state is WeatherInitial) {
               return Center(child: Text('Please Select a Location'));
@@ -41,17 +60,25 @@ class Weather extends StatelessWidget {
             if (state is WeatherLoadSuccess) {
               final weather = state.weather;
 
-              return ListView(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 50.0),
-                    child: Center(
-                      child: Text(
-                          weather.toJson().toString()
+              return RefreshIndicator(
+                onRefresh: () {
+                  BlocProvider.of<WeatherBloc>(context).add(
+                    WeatherRefreshRequested(city: state.weather.city),
+                  );
+                  return _refreshCompleter.future;
+                },
+                child: ListView(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 50.0),
+                      child: Center(
+                        child: Text(
+                            weather.toJson().toString()
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               );
             }
             if (state is WeatherLoadFailure) {

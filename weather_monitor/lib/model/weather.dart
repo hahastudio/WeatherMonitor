@@ -4,6 +4,7 @@ import 'package:weather_monitor/util/typeconverter.dart';
 class OverAllWeather {
   double latitude;
   double longitude;
+  String city;
   String timezone;
   int timezoneOffset;
   Weather current;
@@ -15,6 +16,7 @@ class OverAllWeather {
   OverAllWeather({
     this.latitude,
     this.longitude,
+    this.city,
     this.timezone,
     this.timezoneOffset,
     this.current,
@@ -29,6 +31,7 @@ class OverAllWeather {
     var result = OverAllWeather(
       latitude: intToDouble(json['lat']),
       longitude: intToDouble(json['lon']),
+      city: json['city'],
       timezone: json['timezone'],
       timezoneOffset: json['timezone_offset'],
       current: json['current'] != null ? Weather.fromJson(json['current']) : null,
@@ -52,6 +55,7 @@ class OverAllWeather {
     var result = Map<String, dynamic>();
     result['lat'] = latitude;
     result['lon'] = longitude;
+    result['city'] = city;
     result['timezone'] = timezone;
     result['timezone_offset'] = timezoneOffset;
     if (current != null)
@@ -194,7 +198,7 @@ class Weather {
 
   Map<String, dynamic> toJson() {
     var result = Map<String, dynamic>();
-    result['dt'] = dt.toString();
+    result['dt'] = dt.millisecondsSinceEpoch / 1000;
     if (sunrise != null)
       result['sunrise'] = sunrise.millisecondsSinceEpoch / 1000;
     if (sunset != null)

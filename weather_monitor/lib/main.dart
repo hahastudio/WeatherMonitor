@@ -36,7 +36,7 @@ class WeatherApp extends StatelessWidget {
       home: BlocProvider(
         create: (context) =>
             WeatherBloc(weatherRepository: weatherRepository),
-        child: Weather(),
+        child: WeatherWidget(),
       ),
     );
   }

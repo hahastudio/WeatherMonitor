@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class CitySelection extends StatefulWidget {
+class CitySelectionWidget extends StatefulWidget {
   @override
-  State<CitySelection> createState() => _CitySelectionState();
+  State<CitySelectionWidget> createState() => _CitySelectionWidgetState();
 }
 
-class _CitySelectionState extends State<CitySelection> {
+class _CitySelectionWidgetState extends State<CitySelectionWidget> {
   final TextEditingController _textController = TextEditingController();
 
   @override
