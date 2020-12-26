@@ -194,7 +194,7 @@ class Weather {
 
   Map<String, dynamic> toJson() {
     var result = Map<String, dynamic>();
-    result['dt'] = dt.millisecondsSinceEpoch / 1000;
+    result['dt'] = dt.toString();
     if (sunrise != null)
       result['sunrise'] = sunrise.millisecondsSinceEpoch / 1000;
     if (sunset != null)

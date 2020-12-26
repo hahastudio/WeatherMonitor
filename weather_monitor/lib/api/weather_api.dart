@@ -1,4 +1,4 @@
-import 'package:weather_monitor/model/weather.dart';
+import 'package:weather_monitor/model/models.dart';
 
 abstract class WeatherApi {
   Future<Location> getLocation(String city);

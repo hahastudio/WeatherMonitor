@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:weather_monitor/api/weather_api.dart';
-import 'package:weather_monitor/model/weather.dart';
+import 'package:weather_monitor/api/apis.dart';
+import 'package:weather_monitor/model/models.dart';
 
 class OpenWeatherMapWeatherApi extends WeatherApi {
 

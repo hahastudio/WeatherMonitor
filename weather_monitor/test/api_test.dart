@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
-import 'package:weather_monitor/api/openweathermap_weather_api.dart';
-import 'package:weather_monitor/model/weather.dart';
+import 'package:weather_monitor/api/apis.dart';
+import 'package:weather_monitor/model/models.dart';
 
 import 'util/test_util.dart';
 
