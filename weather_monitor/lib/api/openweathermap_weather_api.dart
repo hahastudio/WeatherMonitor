@@ -18,7 +18,7 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
   @override
   Future<Location> getLocation(String city) async {
     // TODO: read city.list.min.json and query location with city name
-    throw UnimplementedError();
+    return Location(latitude: 31.23333, longitude: 121.466667);
   }
 
   @override
