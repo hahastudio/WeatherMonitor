@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:weather_monitor/util/typeconverter.dart';
 import 'package:weather_monitor/util/weather_icon_map.dart';
+import 'package:weather_monitor/widget/empty_widget.dart';
 
 /// Overall weather details from https://openweathermap.org/api/one-call-api
 class OverAllWeather {
@@ -155,9 +157,9 @@ class Weather {
       uvi: intToDouble(json['uvi']),
       visibility: intToDouble(json['visibility']),
       wind: Wind.fromJson({
-        'wind_speed': json['wind_speed'],
-        'wind_deg': json['wind_deg'],
-        'wind_gust': json['wind_gust'],
+        'speed': json['wind_speed'],
+        'deg': json['wind_deg'],
+        'gust': json['wind_gust'],
       }),
       probability: json['pop'] != null ? intToDouble(json['pop']) : null,
       weather: WeatherCondition.fromJson(json['weather'][0]),
@@ -300,6 +302,7 @@ class Wind {
   /// Unit Default: meter/sec, Metric: meter/sec, Imperial: miles/hour.
   double speed;
   /// Wind direction, degrees (meteorological)
+  /// 0 means that wind blows from north.
   double deg;
   /// (where available) Wind gust.
   /// Unit Default: meter/sec, Metric: meter/sec, Imperial: miles/hour
@@ -401,7 +404,7 @@ class WeatherCondition {
     'icon': icon
   };
 
-  IconData getIconData(){
+  IconData getIconData() {
     switch(this.icon){
       case '01d': return WeatherIcons.clear_day;
       case '01n': return WeatherIcons.clear_night;
@@ -423,7 +426,18 @@ class WeatherCondition {
       case '13n': return WeatherIcons.snow_night;
       case '50d': return WeatherIcons.mist_day;
       case '50n': return WeatherIcons.mist_night;
-      default: return WeatherIcons.clear_day;
+      default: return WeatherIcons.no_report;
+    }
+  }
+
+  Future<Widget> getWeatherImage(BuildContext context) async {
+    try {
+      final bundle = DefaultAssetBundle.of(context);
+      final imagePath = 'assets/images/${this.icon}.png';
+      await bundle.load(imagePath);
+      return Image.asset(imagePath, isAntiAlias: true,);
+    } catch (e) {
+      return EmptyWidget();
     }
   }
 }

@@ -39,7 +39,7 @@ class WeatherSummaryWidget extends StatelessWidget {
                 ),
               ],
             ),
-            _mapWeatherConditionToImage(this.condition),
+            _mapWeatherConditionToIcon(this.condition),
           ]
       ),
     );
@@ -50,20 +50,30 @@ class WeatherSummaryWidget extends StatelessWidget {
     return temp;
   }
 
-  Widget _mapWeatherConditionToImage(WeatherCondition condition) {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(bottom: 32),
+  Widget _mapWeatherConditionToIcon(WeatherCondition condition) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Center(
+          child: Container(
+            margin: EdgeInsets.only(bottom: 19, right: 25),
             child: Icon(
               condition.getIconData(),
-              size: 72,
+              size: 40,
             ),
-          )
-        ],
-      ),
+          ),
+        ),
+        Center(
+          child: Text(condition.description,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w300,
+              color: Colors.black,
+            )
+          ),
+        )
+      ],
     );
   }
 }

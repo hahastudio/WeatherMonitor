@@ -27,21 +27,24 @@ class LocationWidget extends StatelessWidget {
           children: [
             Icon(Icons.location_on, color: Colors.black, size: 15),
             SizedBox(width: 10),
-            Text(this.longitude.toString(),
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                )),
-            Text(' , ',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                )),
             Text(this.latitude.toString(),
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.black,
-                )),
+                )
+            ),
+            Text(' , ',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+              )
+            ),
+            Text(this.longitude.toString(),
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+              )
+            ),
           ],
         )
       ]),

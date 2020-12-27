@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_monitor/bloc/blocs.dart';
-import 'package:weather_monitor/model/models.dart';
 import 'package:weather_monitor/widget/widgets.dart';
 
 
@@ -83,13 +82,24 @@ class _WeatherWidgetState extends State<WeatherWidget> {
                       feelsLike: weather.current.feelsLike.celsius,
                     ),
                     SizedBox(height: 20),
+                    WeatherDetailsWidget(weather: weather.current),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 50.0),
-                      child: Center(
-                        child: Text(
-                            weather.toJson().toString()
-                        ),
+                      child: Divider(
+                          color: Colors.black45
                       ),
+                      padding: EdgeInsets.all(10),
+                    ),
+                    ForecastHourlyHorizontalWidget(
+                      weathers: weather.hourly,
+                    ),
+                    Padding(
+                      child: Divider(
+                          color: Colors.black45
+                      ),
+                      padding: EdgeInsets.all(10),
+                    ),
+                    ForecastDailyHorizontalWidget(
+                      weathers: weather.daily,
                     ),
                   ],
                 ),
