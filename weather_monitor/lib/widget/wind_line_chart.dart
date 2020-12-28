@@ -18,7 +18,7 @@ class WindLineChart extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-          "Wind speed",
+          "Wind speed (m/s)",
         ),
         Container(
           height: 300,

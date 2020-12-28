@@ -18,7 +18,7 @@ class TemperatureLineChart extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-            "Temperature",
+            "Temperature (°C)",
         ),
         Container(
           height: 300,

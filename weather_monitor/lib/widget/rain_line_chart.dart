@@ -18,7 +18,7 @@ class RainLineChart extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-          "Rain/snow volume",
+          "Rain/snow volume (mm)",
         ),
         Container(
           height: 300,
