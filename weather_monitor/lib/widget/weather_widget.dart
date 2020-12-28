@@ -101,6 +101,36 @@ class _WeatherWidgetState extends State<WeatherWidget> {
                     ForecastDailyHorizontalWidget(
                       weathers: weather.daily,
                     ),
+                    Padding(
+                      child: Divider(
+                          color: Colors.black45
+                      ),
+                      padding: EdgeInsets.all(10),
+                    ),
+                    TemperatureLineChart(
+                      weather.hourly,
+                      animate: true,
+                    ),
+                    Padding(
+                      child: Divider(
+                          color: Colors.black45
+                      ),
+                      padding: EdgeInsets.all(10),
+                    ),
+                    RainLineChart(
+                      weather.hourly,
+                      animate: true,
+                    ),
+                    Padding(
+                      child: Divider(
+                          color: Colors.black45
+                      ),
+                      padding: EdgeInsets.all(10),
+                    ),
+                    WindLineChart(
+                      weather.hourly,
+                      animate: true,
+                    )
                   ],
                 ),
               );

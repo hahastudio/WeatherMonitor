@@ -21,7 +21,7 @@ class ForecastHourlyHorizontalWidget extends StatelessWidget {
         itemCount: this.weathers.length,
         separatorBuilder: (context, index) => Divider(
           height: 100,
-          color: Colors.white,
+          color: Colors.black87,
         ),
         padding: EdgeInsets.only(left: 10, right: 10),
         itemBuilder: (context, index) {
