@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_monitor/bloc/blocs.dart';
 import 'package:weather_monitor/widget/widgets.dart';
 
@@ -10,12 +11,23 @@ class WeatherWidget extends StatefulWidget {
 }
 
 class _WeatherWidgetState extends State<WeatherWidget> {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   Completer<void> _refreshCompleter;
 
   @override
   void initState() {
     super.initState();
     _refreshCompleter = Completer<void>();
+    loadPrefs();
+  }
+
+  void loadPrefs() async {
+    final SharedPreferences prefs = await _prefs;
+    String city = prefs.getString('city') ?? '';
+
+    if (city != null && city != '')
+      BlocProvider.of<WeatherBloc>(context)
+          .add(WeatherRequested(city: city));
   }
 
   @override
