@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:weather_monitor/model/models.dart';
 import 'package:weather_monitor/util/typeconverter.dart';
 import 'package:weather_monitor/util/weather_icon_map.dart';
 import 'package:weather_monitor/widget/empty_widget.dart';
@@ -808,82 +809,4 @@ class ForecastMainWeather {
       result['grnd_level'] = groundLevel;
     return result;
   }
-}
-
-class City {
-  /// City ID
-  final int id;
-  /// City name
-  final String name;
-  /// City location
-  final Location coordinate;
-  /// Country code (GB, JP etc.)
-  final String country;
-  /// Shift in seconds from UTC
-  final int timezone;
-  /// (where available) Sunrise time, UTC
-  DateTime sunrise;
-  /// (where available) Sunset time, UTC
-  DateTime sunset;
-
-  City({
-    this.id,
-    this.name,
-    this.coordinate,
-    this.country,
-    this.timezone,
-    this.sunrise,
-    this.sunset
-  });
-
-  static City fromJson(Map<String, dynamic> json) {
-    return City(
-      id: json['id'],
-      name: json['name'],
-      coordinate: Location.fromJson(json['coord']),
-      country: json['country'],
-      timezone: json['timezone'],
-      sunrise: json['sunrise'] != null ? DateTime.fromMillisecondsSinceEpoch(json['sunrise'] * 1000) : null,
-      sunset: json['sunset'] != null ? DateTime.fromMillisecondsSinceEpoch(json['sunset'] * 1000) : null,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    var result = {
-      'id': id,
-      'name': name,
-      'coord': coordinate.toJson(),
-      'country': country,
-      'timezone': timezone,
-    };
-    if (sunrise != null)
-      result['sunrise'] = sunrise.millisecondsSinceEpoch / 1000;
-    if (sunset != null)
-      result['sunset'] = sunset.millisecondsSinceEpoch / 1000;
-    return result;
-  }
-}
-
-class Location {
-  /// City geo location, latitude
-  final double latitude;
-  /// City geo location, longitude
-  final double longitude;
-
-  Location({
-    this.latitude,
-    this.longitude,
-  });
-
-  static Location fromJson(Map<String, dynamic> json) {
-    return Location(
-        latitude: intToDouble(json['lat']),
-        longitude: intToDouble(json['lon']),
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'lat': latitude,
-    'lon': longitude,
-  };
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_monitor/api/apis.dart';
 import 'package:weather_monitor/model/models.dart';
 
@@ -7,8 +8,10 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
 
   static const endPointHost = 'api.openweathermap.org';
   static const endPointPrefix = '/data/2.5';
+
   final String apiKey;
   final http.Client httpClient;
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   OpenWeatherMapWeatherApi({
     this.apiKey,
@@ -17,9 +20,12 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
 
   @override
   Future<Location> getLocation(String city) async {
-    // TODO: read city.list.min.json and query location with city name
-    var weather = await getCurrentWeather(city);
-    return Location(latitude: weather.coordinate.latitude, longitude: weather.coordinate.longitude);
+    final SharedPreferences prefs = await _prefs;
+    //FIXME: location may not be saved
+    var latitude = prefs.getDouble('city.coordinate.latitude');
+    var longitude = prefs.getDouble('city.coordinate.longitude');
+
+    return Location(latitude: latitude, longitude: longitude);
   }
 
   @override

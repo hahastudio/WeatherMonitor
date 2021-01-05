@@ -42,4 +42,4 @@ app.*.map.json
 
 # Customized
 .env*
-/assets/city.list.min.json
+/assets/current.city.list.min.json
