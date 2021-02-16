@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:strings/strings.dart';
 import 'package:weather_monitor/model/models.dart';
 
 class WeatherSummaryWidget extends StatelessWidget {
@@ -64,7 +65,7 @@ class WeatherSummaryWidget extends StatelessWidget {
           ),
         ),
         Center(
-          child: Text(condition.description,
+          child: Text(capitalize(condition.description),
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 18,

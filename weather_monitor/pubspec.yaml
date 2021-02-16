@@ -36,6 +36,7 @@ dependencies:
   charts_flutter: ^0.9.0
   shared_preferences: '>=0.5.12+4 <2.0.0'
   autocomplete_textfield: ^1.7.3
+  strings: ^0.1.4
 
 dev_dependencies:
   flutter_test:
