@@ -37,18 +37,8 @@ class _WeatherWidgetState extends State<WeatherWidget> {
         title: Text('Weather Monitor'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () async {
-              final city = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CitySelectionWidget(),
-                ),
-              );
-              if (city != null) {
-                BlocProvider.of<WeatherBloc>(context)
-                    .add(WeatherRequested(city: city));
-              }
+            icon: Icon(Icons.settings),
+            onPressed: () {
             },
           )
         ],
@@ -156,6 +146,21 @@ class _WeatherWidgetState extends State<WeatherWidget> {
             return EmptyWidget();
           },
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.search),
+        onPressed: () async {
+          final city = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CitySelectionWidget(),
+            ),
+          );
+          if (city != null) {
+            BlocProvider.of<WeatherBloc>(context)
+                .add(WeatherRequested(city: city));
+          }
+        },
       ),
     );
   }
