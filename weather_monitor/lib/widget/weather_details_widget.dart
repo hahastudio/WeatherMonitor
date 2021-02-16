@@ -32,7 +32,7 @@ class WeatherDetailsWidget extends StatelessWidget {
                       Text('Wind: ${this.weather.wind.speed} m/s, ${this.weather.wind.deg}°',
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.black,
+                            color: Theme.of(context).textTheme.bodyText1.color,
                           )
                       ),
                     ],
@@ -53,7 +53,7 @@ class WeatherDetailsWidget extends StatelessWidget {
                   Text('Cloudiness: ${this.weather.clouds}%',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.black,
+                        color: Theme.of(context).textTheme.bodyText1.color,
                       )
                   ),
                 ],
@@ -70,7 +70,7 @@ class WeatherDetailsWidget extends StatelessWidget {
                   Text('Pressure: ${this.weather.pressure} hPa',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.black,
+                        color: Theme.of(context).textTheme.bodyText1.color,
                       )
                   ),
                 ],
@@ -87,7 +87,7 @@ class WeatherDetailsWidget extends StatelessWidget {
                   Text('Humidity: ${this.weather.humidity}%',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.black,
+                        color: Theme.of(context).textTheme.bodyText1.color,
                       )
                   ),
                 ],
@@ -104,7 +104,7 @@ class WeatherDetailsWidget extends StatelessWidget {
                   Text('Sunrise: ${TimeOfDay.fromDateTime(this.weather.sunrise).format(context)}',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.black,
+                        color: Theme.of(context).textTheme.bodyText1.color,
                       )
                   ),
                 ],
@@ -121,7 +121,7 @@ class WeatherDetailsWidget extends StatelessWidget {
                   Text('Sunset: ${TimeOfDay.fromDateTime(this.weather.sunset).format(context)}',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.black,
+                        color: Theme.of(context).textTheme.bodyText1.color,
                       )
                   ),
                 ],

@@ -19,7 +19,7 @@ class ValueTile extends StatelessWidget {
         Text(
           this.label,
           style: TextStyle(
-              color: Colors.black87
+              color: Theme.of(context).textTheme.bodyText1.color
           ),
         ),
         SizedBox(
@@ -27,7 +27,7 @@ class ValueTile extends StatelessWidget {
         ),
         Icon(
           iconData,
-          color: Colors.black,
+          color: Theme.of(context).textTheme.bodyText1.color,
           size: 20,
         ),
         SizedBox(
@@ -36,7 +36,7 @@ class ValueTile extends StatelessWidget {
         Text(
           this.value,
           style:
-          TextStyle(color: Colors.black),
+          TextStyle(color: Theme.of(context).textTheme.bodyText1.color),
         ),
       ],
     );

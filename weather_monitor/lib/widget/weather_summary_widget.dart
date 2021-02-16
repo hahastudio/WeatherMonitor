@@ -26,7 +26,7 @@ class WeatherSummaryWidget extends StatelessWidget {
                   '${_formatTemperature(this.temp)}°ᶜ',
                   style: TextStyle(
                     fontSize: 50,
-                    color: Colors.black,
+                    color: Theme.of(context).textTheme.bodyText1.color,
                     fontWeight: FontWeight.w300,
                   ),
                 ),
@@ -34,13 +34,13 @@ class WeatherSummaryWidget extends StatelessWidget {
                   'Feels like ${_formatTemperature(this.feelsLike)}°ᶜ',
                   style: TextStyle(
                     fontSize: 18,
-                    color: Colors.black,
+                    color: Theme.of(context).textTheme.bodyText1.color,
                     fontWeight: FontWeight.w300,
                   ),
                 ),
               ],
             ),
-            _mapWeatherConditionToIcon(this.condition),
+            _mapWeatherConditionToIcon(context, this.condition),
           ]
       ),
     );
@@ -51,7 +51,7 @@ class WeatherSummaryWidget extends StatelessWidget {
     return temp;
   }
 
-  Widget _mapWeatherConditionToIcon(WeatherCondition condition) {
+  Widget _mapWeatherConditionToIcon(BuildContext context, WeatherCondition condition) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -61,6 +61,7 @@ class WeatherSummaryWidget extends StatelessWidget {
             child: Icon(
               condition.getIconData(),
               size: 40,
+              color: Theme.of(context).textTheme.bodyText1.color,
             ),
           ),
         ),
@@ -70,7 +71,7 @@ class WeatherSummaryWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w300,
-              color: Colors.black,
+              color: Theme.of(context).textTheme.bodyText1.color,
             )
           ),
         )

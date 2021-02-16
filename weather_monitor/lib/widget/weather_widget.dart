@@ -87,7 +87,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
                     WeatherDetailsWidget(weather: weather.current),
                     Padding(
                       child: Divider(
-                          color: Colors.black45
+                          color: Theme.of(context).textTheme.bodyText2.color
                       ),
                       padding: EdgeInsets.all(10),
                     ),
@@ -96,7 +96,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
                     ),
                     Padding(
                       child: Divider(
-                          color: Colors.black45
+                          color: Theme.of(context).textTheme.bodyText2.color
                       ),
                       padding: EdgeInsets.all(10),
                     ),
@@ -105,7 +105,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
                     ),
                     Padding(
                       child: Divider(
-                          color: Colors.black45
+                          color: Theme.of(context).textTheme.bodyText2.color
                       ),
                       padding: EdgeInsets.all(10),
                     ),
@@ -115,7 +115,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
                     ),
                     Padding(
                       child: Divider(
-                          color: Colors.black45
+                          color: Theme.of(context).textTheme.bodyText2.color
                       ),
                       padding: EdgeInsets.all(10),
                     ),
@@ -125,7 +125,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
                     ),
                     Padding(
                       child: Divider(
-                          color: Colors.black45
+                          color: Theme.of(context).textTheme.bodyText2.color
                       ),
                       padding: EdgeInsets.all(10),
                     ),
@@ -140,7 +140,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
             if (state is WeatherLoadFailure) {
               return Text(
                 'Something went wrong!',
-                style: TextStyle(color: Colors.red),
+                style: TextStyle(color: Theme.of(context).errorColor),
               );
             }
             return EmptyWidget();

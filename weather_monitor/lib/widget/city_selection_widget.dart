@@ -35,7 +35,10 @@ class _CitySelectionWidgetState extends State<CitySelectionWidget> {
   @override
   Widget build(BuildContext context) {
     searchTextField = AutoCompleteTextField<City>(
-      style: new TextStyle(color: Colors.black, fontSize: 16.0),
+      style: new TextStyle(
+          color: Theme.of(context).textTheme.bodyText1.color,
+          fontSize: 16.0
+      ),
       decoration: new InputDecoration(
         suffixIcon: Container(
           width: 85.0,
@@ -43,7 +46,7 @@ class _CitySelectionWidgetState extends State<CitySelectionWidget> {
         ),
         contentPadding: EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 20.0),
         hintText: 'Search city name',
-        hintStyle: TextStyle(color: Colors.black)
+        hintStyle: TextStyle(color: Theme.of(context).textTheme.bodyText1.color)
       ),
       controller: _textController,
       clearOnSubmit: false,
@@ -59,6 +62,7 @@ class _CitySelectionWidgetState extends State<CitySelectionWidget> {
       },
       itemBuilder: (context, item) {
         return Container(
+          color: Theme.of(context).backgroundColor,
           padding: EdgeInsets.all(10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

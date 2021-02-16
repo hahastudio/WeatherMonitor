@@ -20,29 +20,32 @@ class LocationWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 40,
               fontWeight: FontWeight.w300,
-              color: Colors.black,
+              color: Theme.of(context).textTheme.bodyText1.color,
             )),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.location_on, color: Colors.black, size: 15),
+            Icon(Icons.location_on,
+                color: Theme.of(context).textTheme.bodyText1.color,
+                size: 15
+            ),
             SizedBox(width: 10),
             Text(this.latitude.toString(),
                 style: TextStyle(
                   fontSize: 16,
-                  color: Colors.black,
+                  color: Theme.of(context).textTheme.bodyText1.color,
                 )
             ),
             Text(' , ',
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.black,
+                color: Theme.of(context).textTheme.bodyText1.color,
               )
             ),
             Text(this.longitude.toString(),
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.black,
+                color: Theme.of(context).textTheme.bodyText1.color,
               )
             ),
           ],

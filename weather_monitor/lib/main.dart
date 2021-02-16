@@ -31,13 +31,26 @@ class WeatherApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Weather Monitor',
-      home: BlocProvider(
-        create: (context) =>
-            WeatherBloc(weatherRepository: weatherRepository),
-        child: WeatherWidget(),
-      ),
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider<WeatherBloc>(
+              create: (context) =>
+                  WeatherBloc(weatherRepository: weatherRepository)
+          ),
+          BlocProvider<ThemeBloc>(
+              create: (context) =>
+                  ThemeBloc()
+          ),
+        ],
+        child: BlocBuilder<ThemeBloc, ThemeState>(
+            builder: (BuildContext context, ThemeState themeState) {
+              return MaterialApp(
+                title: 'Weather Monitor',
+                theme: themeState.themeData,
+                home: WeatherWidget(),
+              );
+            }
+        )
     );
   }
 }
