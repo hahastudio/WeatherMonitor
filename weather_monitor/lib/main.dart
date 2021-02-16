@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:weather_monitor/model/theme.dart';
 
 import 'api/apis.dart';
 import 'bloc/blocs.dart';
@@ -46,7 +47,8 @@ class WeatherApp extends StatelessWidget {
             builder: (BuildContext context, ThemeState themeState) {
               return MaterialApp(
                 title: 'Weather Monitor',
-                theme: themeState.themeData,
+                theme: AppThemes.appThemeData[AppTheme.lightTheme],
+                darkTheme: AppThemes.appThemeData[AppTheme.darkTheme],
                 home: WeatherWidget(),
               );
             }
