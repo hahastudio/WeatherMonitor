@@ -504,7 +504,7 @@ class WeatherAlert {
   /// Date and time of the end of the alert, UTC
   DateTime end;
   /// Description of the alert
-  DateTime description;
+  String description;
 
   WeatherAlert({
     this.senderName,

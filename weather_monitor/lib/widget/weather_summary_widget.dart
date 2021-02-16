@@ -56,7 +56,7 @@ class WeatherSummaryWidget extends StatelessWidget {
       children: [
         Center(
           child: Container(
-            margin: EdgeInsets.only(bottom: 19, right: 25),
+            margin: EdgeInsets.only(bottom: 19),
             child: Icon(
               condition.getIconData(),
               size: 40,
