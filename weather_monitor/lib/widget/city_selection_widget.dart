@@ -49,15 +49,17 @@ class _CitySelectionWidgetState extends State<CitySelectionWidget> {
       clearOnSubmit: false,
       key: key,
       suggestions: CityViewModel.cities,
-      itemSubmitted: (item) {
+      itemSubmitted: (item) async {
         city = item;
         setState(
           () => _textController.text = item.name
         );
+        await saveCity(city);
+        Navigator.pop(context, _textController.text);
       },
       itemBuilder: (context, item) {
         return Container(
-          padding: EdgeInsets.all(15.0),
+          padding: EdgeInsets.all(10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
@@ -94,17 +96,9 @@ class _CitySelectionWidgetState extends State<CitySelectionWidget> {
           children: [
             Expanded(
               child: Padding(
-                padding: EdgeInsets.only(left: 10.0),
+                padding: EdgeInsets.only(left: 10.0, right: 10.0),
                 child: searchTextField,
               ),
-            ),
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () async {
-                //FIXME: user may not select a city in the list
-                await saveCity(city);
-                Navigator.pop(context, _textController.text);
-              },
             )
           ],
         ),
