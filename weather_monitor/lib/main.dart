@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:http/http.dart' as http;
 import 'package:weather_monitor/model/theme.dart';
 
@@ -12,6 +13,8 @@ import 'widget/widgets.dart';
 
 Future main() async {
   await DotEnv().load('.env');
+  await Settings.init();
+
   Bloc.observer = SimpleBlocObserver();
   final WeatherRepository weatherRepository = WeatherRepository(
     OpenWeatherMapWeatherApi(
@@ -47,8 +50,7 @@ class WeatherApp extends StatelessWidget {
             builder: (BuildContext context, ThemeState themeState) {
               return MaterialApp(
                 title: 'Weather Monitor',
-                theme: AppThemes.appThemeData[AppTheme.lightTheme],
-                darkTheme: AppThemes.appThemeData[AppTheme.darkTheme],
+                theme: AppThemes.appThemeData[themeState.appTheme],
                 home: WeatherWidget(),
               );
             }

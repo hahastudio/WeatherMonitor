@@ -7,7 +7,7 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
 
   ThemeBloc(): super(
     ThemeState(
-      themeData: AppThemes.appThemeData[AppTheme.lightTheme],
+      appTheme: AppTheme.lightTheme,
     ),
   );
 
@@ -15,7 +15,7 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
   Stream<ThemeState> mapEventToState(ThemeEvent event) async* {
     if (event is ThemeEvent) {
       yield ThemeState(
-        themeData: AppThemes.appThemeData[event.appTheme],
+        appTheme: event.appTheme,
       );
     }
   }

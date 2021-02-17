@@ -9,6 +9,7 @@ class AppThemes {
       accentColor: Colors.blue,
       dividerColor: Colors.black87,
       errorColor: Colors.red,
+      brightness: Brightness.light,
       textTheme: TextTheme(
         bodyText1: TextStyle(
           color: Colors.black,
@@ -25,6 +26,7 @@ class AppThemes {
       accentColor: Colors.blueGrey,
       dividerColor: Colors.white70,
       errorColor: Colors.red,
+      brightness: Brightness.dark,
       textTheme: TextTheme(
         bodyText1: TextStyle(
           color: Colors.white,

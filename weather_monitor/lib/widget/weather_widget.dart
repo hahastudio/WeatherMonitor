@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_monitor/bloc/blocs.dart';
+import 'package:weather_monitor/model/models.dart';
 import 'package:weather_monitor/widget/widgets.dart';
 
 
@@ -23,11 +25,17 @@ class _WeatherWidgetState extends State<WeatherWidget> {
 
   void loadPrefs() async {
     final SharedPreferences prefs = await _prefs;
+
+    // city
     String city = prefs.getString('city') ?? '';
 
     if (city != null && city != '')
       BlocProvider.of<WeatherBloc>(context)
           .add(WeatherRequested(city: city));
+    // theme
+    bool isDarkTheme = Settings.getValue<bool>('settings.isDarkMode', false);
+    BlocProvider.of<ThemeBloc>(context)
+        .add(ThemeEvent(appTheme: isDarkTheme ? AppTheme.darkTheme : AppTheme.lightTheme));
   }
 
   @override
@@ -39,6 +47,9 @@ class _WeatherWidgetState extends State<WeatherWidget> {
           IconButton(
             icon: Icon(Icons.settings),
             onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (_) => SettingsListWidget(),
+              ));
             },
           )
         ],
