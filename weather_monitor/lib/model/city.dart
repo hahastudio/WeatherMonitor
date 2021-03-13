@@ -43,7 +43,7 @@ class City {
 
   /// Convert json to a list of City objects
   static List<City> fromListJson(List json) {
-    final cities = List<City>();
+    final cities = <City>[];
     for (final item in json) {
       cities.add(City.fromJson(item));
     }
@@ -95,7 +95,7 @@ class CityViewModel {
 
   static Future loadCities() async {
     try {
-      cities = new List<City>();
+      cities = <City>[];
       String jsonString = await rootBundle.loadString('assets/current.city.list.min.json');
       List parsedJson = json.decode(jsonString) as List;
       for (int i = 0; i < parsedJson.length; i++) {

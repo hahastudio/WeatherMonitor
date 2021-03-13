@@ -194,7 +194,7 @@ class Weather {
 
   /// Convert json to a list of Weather objects
   static List<Weather> fromListJson(List json) {
-    final weathers = List<Weather>();
+    final weathers = <Weather>[];
     for (final item in json) {
       weathers.add(Weather.fromJson(item));
     }
@@ -527,7 +527,7 @@ class WeatherAlert {
 
   /// Convert Json to a list of WeatherAlert objects
   static List<WeatherAlert> fromListJson(List json) {
-    final alerts = List<WeatherAlert>();
+    final alerts = <WeatherAlert>[];
     for (final item in json) {
       alerts.add(WeatherAlert.fromJson(item));
     }
@@ -713,7 +713,7 @@ class ForecastWeather {
 
   /// Convert json to a list of ForecastWeather objects
   static List<ForecastWeather> fromListJson(List json) {
-    final weathers = List<ForecastWeather>();
+    final weathers = <ForecastWeather>[];
     for (final item in json) {
       weathers.add(ForecastWeather.fromJson(item));
     }
