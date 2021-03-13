@@ -29,7 +29,7 @@ class RainLineChart extends StatelessWidget {
                     new charts.Series<Weather, DateTime>(
                       id: 'Rain',
                       colorFn: (_, __) =>
-                      charts.MaterialPalette.blue.shadeDefault,
+                        charts.MaterialPalette.blue.shadeDefault,
                       domainFn: (Weather weather, _) => weather.dt,
                       measureFn: (Weather weather, _) {
                         if (weather.rain != null) {

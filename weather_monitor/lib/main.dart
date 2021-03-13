@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:http/http.dart' as http;
 import 'package:weather_monitor/model/theme.dart';
@@ -12,13 +12,13 @@ import 'simple_bloc_observer.dart';
 import 'widget/widgets.dart';
 
 Future main() async {
-  await DotEnv().load('.env');
+  await DotEnv.load(fileName: '.env');
   await Settings.init();
 
   Bloc.observer = SimpleBlocObserver();
   final WeatherRepository weatherRepository = WeatherRepository(
     OpenWeatherMapWeatherApi(
-      apiKey: DotEnv().env['OPENWEATHERMAP_API_KEY'],
+      apiKey: DotEnv.env['OPENWEATHERMAP_API_KEY'],
       httpClient: http.Client()
     )
   );
