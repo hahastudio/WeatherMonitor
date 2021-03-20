@@ -1,4 +1,3 @@
-import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_monitor/model/models.dart';
@@ -11,8 +10,6 @@ class CitySelectionWidget extends StatefulWidget {
 class _CitySelectionWidgetState extends State<CitySelectionWidget> {
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   final TextEditingController _textController = TextEditingController();
-  GlobalKey<AutoCompleteTextFieldState<City>> key = new GlobalKey();
-  AutoCompleteTextField searchTextField;
   City city;
 
   void _loadCities() async {
@@ -32,63 +29,56 @@ class _CitySelectionWidgetState extends State<CitySelectionWidget> {
     super.initState();
   }
 
+  static String _displayStringForOption(City option) => option.name;
+
   @override
   Widget build(BuildContext context) {
-    searchTextField = AutoCompleteTextField<City>(
-      style: new TextStyle(
-          color: Theme.of(context).textTheme.bodyText1.color,
-          fontSize: 16.0
-      ),
-      decoration: new InputDecoration(
-        suffixIcon: Container(
-          width: 85.0,
-          height: 60.0,
-        ),
-        contentPadding: EdgeInsets.fromLTRB(10.0, 30.0, 10.0, 20.0),
-        hintText: 'Search city name',
-        hintStyle: TextStyle(color: Theme.of(context).textTheme.bodyText1.color)
-      ),
-      controller: _textController,
-      clearOnSubmit: false,
-      key: key,
-      suggestions: CityViewModel.cities,
-      itemSubmitted: (item) async {
-        city = item;
+    var autoCompleteInput = Autocomplete<City>(
+      displayStringForOption: _displayStringForOption,
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text == '') {
+          return const Iterable<City>.empty();
+        }
+        return CityViewModel.cities.where((City option) {
+          return option.name.toLowerCase()
+              .contains(textEditingValue.text.toLowerCase());
+        });
+      },
+      optionsViewBuilder: (BuildContext context, AutocompleteOnSelected<City> onSelected, Iterable<City> options) {
+        var optionList = options.toList();
+        return Align(
+          alignment: Alignment.topLeft,
+          child: Material(
+            elevation: 4.0,
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: ListView.separated(
+              padding: EdgeInsets.only(right: 10.0),
+              itemCount: options.length,
+              itemBuilder: (context, int position) {
+                var option = optionList[position];
+                return GestureDetector(
+                  onTap: () {
+                    onSelected(option);
+                  },
+                  child: ListTile(
+                    title: Text(_displayStringForOption(option)),
+                    subtitle: Text(option.country),
+                  ),
+                );
+              },
+              separatorBuilder: (context, _) => const Divider(),
+            ),
+          ),
+        );
+      },
+      onSelected: (City selection) async {
+        city = selection;
         setState(
-          () => _textController.text = item.name
+                () => _textController.text = selection.name
         );
         await saveCity(city);
         Navigator.pop(context, _textController.text);
       },
-      itemBuilder: (context, item) {
-        return Container(
-          color: Theme.of(context).backgroundColor,
-          padding: EdgeInsets.all(10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(
-                item.name,
-                style: TextStyle(
-                    fontSize: 16.0
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(15.0),
-              ),
-              Text(item.country)
-            ],
-          ),
-        );
-      },
-      itemSorter: (a, b) {
-        return a.name.compareTo(b.name);
-      },
-      itemFilter: (item, query) {
-        return item.name
-          .toLowerCase()
-          .startsWith(query.toLowerCase());
-      }
     );
 
     return Scaffold(
@@ -101,7 +91,7 @@ class _CitySelectionWidgetState extends State<CitySelectionWidget> {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                child: searchTextField,
+                child: autoCompleteInput,
               ),
             )
           ],
