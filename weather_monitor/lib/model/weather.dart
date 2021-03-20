@@ -315,6 +315,14 @@ class Wind {
     this.gust,
   });
 
+  static List<String> sectors = [
+    "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW", "N"
+  ];
+  /// Convert wind direction degree to direction description
+  String getDirection() {
+    int pos = ((this.deg % 360) / 22.5).round();
+    return sectors[pos];
+  }
 
   /// Convert Json to Wind
   static Wind fromJson(Map<String, dynamic> json) {

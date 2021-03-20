@@ -29,7 +29,10 @@ class WeatherIcons {
   static const IconData mist_day = const _IconData(0xf003);
   static const IconData mist_night = const _IconData(0xf04a);
 
+  static const IconData rain = const _IconData(0xf019);
+  static const IconData snow = const _IconData(0xf01b);
   static const IconData wind = const _IconData(0xf050);
+  static const IconData windDirection = const _IconData(0xf0b1);
   static const IconData cloudiness = const _IconData(0xf041);
   static const IconData pressure = const _IconData(0xf079);
   static const IconData humidity = const _IconData(0xf07a);

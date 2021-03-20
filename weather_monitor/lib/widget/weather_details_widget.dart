@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:weather_monitor/model/models.dart';
 import 'package:weather_monitor/util/weather_icon_map.dart';
@@ -15,21 +16,21 @@ class WeatherDetailsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 200,
+        width: 240,
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ConditionalWidget(
-                  condition: this.weather.wind.speed != null,
-                  child: Row(
+                  condition: this.weather.rainVolumes != null,
+                  widgetBuilder: (context) => Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Container(
                         margin: EdgeInsets.only(bottom: 5),
-                        child: Icon(WeatherIcons.wind, size: 15),
+                        child: Icon(WeatherIcons.rain, size: 15),
                       ),
                       SizedBox(width: 10),
-                      Text('Wind: ${this.weather.wind.speed} m/s, ${this.weather.wind.deg}°',
+                      Text('Rain: ${this.weather.rainVolumes.volume['1h']} mm in 1h',
                           style: TextStyle(
                             fontSize: 16,
                             color: Theme.of(context).textTheme.bodyText1.color,
@@ -39,8 +40,61 @@ class WeatherDetailsWidget extends StatelessWidget {
                   )
               ),
               ConditionalWidget(
+                condition: this.weather.rainVolumes != null,
+                widgetBuilder: (context) =>  SizedBox(height: 10),
+              ),
+              ConditionalWidget(
+                  condition: this.weather.snowVolumes != null,
+                  widgetBuilder: (context) => Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(bottom: 5),
+                        child: Icon(WeatherIcons.snow, size: 15),
+                      ),
+                      SizedBox(width: 10),
+                      Text('Rain: ${this.weather.snowVolumes.volume['1h']} mm in 1h',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(context).textTheme.bodyText1.color,
+                          )
+                      ),
+                    ],
+                  )
+              ),
+              ConditionalWidget(
+                condition: this.weather.snowVolumes != null,
+                widgetBuilder: (context) =>  SizedBox(height: 10),
+              ),
+              ConditionalWidget(
                   condition: this.weather.wind.speed != null,
-                  child: SizedBox(height: 10),
+                  widgetBuilder: (context) => Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(bottom: 5),
+                        child: Icon(WeatherIcons.wind, size: 15),
+                      ),
+                      SizedBox(width: 10),
+                      Text('Wind: ${this.weather.wind.speed * 3.6} km/h, ${this.weather.wind.getDirection()}',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(context).textTheme.bodyText1.color,
+                          )
+                      ),
+                      Transform.rotate(
+                        angle: this.weather.wind.deg * math.pi / 180,
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: 5),
+                          child: Icon(WeatherIcons.windDirection, size: 15),
+                        ),
+                      )
+                    ],
+                  )
+              ),
+              ConditionalWidget(
+                  condition: this.weather.wind.speed != null,
+                  widgetBuilder: (context) =>  SizedBox(height: 10),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,

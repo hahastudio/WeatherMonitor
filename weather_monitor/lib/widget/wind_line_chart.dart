@@ -18,7 +18,7 @@ class WindLineChart extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-          "Wind speed (m/s)",
+          "Wind speed (km/h)",
         ),
         Container(
           height: 300,
@@ -34,7 +34,7 @@ class WindLineChart extends StatelessWidget {
                       measureFn: (Weather weather, _) {
                         if (weather.wind != null) {
                           if (weather.wind.speed != null)
-                            return weather.wind.speed;
+                            return weather.wind.speed * 3.6;
                         }
                         return 0;
                       },
