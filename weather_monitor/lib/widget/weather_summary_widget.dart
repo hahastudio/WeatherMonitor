@@ -20,27 +20,41 @@ class WeatherSummaryWidget extends StatelessWidget {
       child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Column(
-              children: [
-                Text(
-                  '${_formatTemperature(this.temp)}°ᶜ',
-                  style: TextStyle(
-                    fontSize: 50,
-                    color: Theme.of(context).textTheme.bodyText1.color,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-                Text(
-                  'Feels like ${_formatTemperature(this.feelsLike)}°ᶜ',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Theme.of(context).textTheme.bodyText1.color,
-                    fontWeight: FontWeight.w300,
-                  ),
-                ),
-              ],
+            Expanded(
+              flex: 1,
+              child: Container(color: Colors.transparent),
             ),
-            _mapWeatherConditionToIcon(context, this.condition),
+            Expanded(
+              flex: 8,
+              child: Column(
+                children: [
+                  Text(
+                    '${_formatTemperature(this.temp)}°ᶜ',
+                    style: TextStyle(
+                      fontSize: 50,
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                  Text(
+                    'Feels like ${_formatTemperature(this.feelsLike)}°ᶜ',
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Theme.of(context).textTheme.bodyText1.color,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 8,
+              child: _mapWeatherConditionToIcon(context, this.condition),
+            ),
+            Expanded(
+              flex: 2,
+              child: Container(color: Colors.transparent),
+            ),
           ]
       ),
     );
@@ -68,6 +82,7 @@ class WeatherSummaryWidget extends StatelessWidget {
         Center(
           child: Text(capitalize(condition.description),
             textAlign: TextAlign.center,
+            softWrap: true,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w300,

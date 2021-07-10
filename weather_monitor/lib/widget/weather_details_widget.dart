@@ -76,7 +76,7 @@ class WeatherDetailsWidget extends StatelessWidget {
                         child: Icon(WeatherIcons.wind, size: 15),
                       ),
                       SizedBox(width: 10),
-                      Text('Wind: ${this.weather.wind.speed * 3.6} km/h, ${this.weather.wind.getDirection()}',
+                      Text('Wind: ${(this.weather.wind.speed * 3.6).toStringAsFixed(2)} km/h, ${this.weather.wind.getDirection()}',
                           style: TextStyle(
                             fontSize: 16,
                             color: Theme.of(context).textTheme.bodyText1.color,
