@@ -83,7 +83,7 @@ class WeatherDetailsWidget extends StatelessWidget {
                           )
                       ),
                       Transform.rotate(
-                        angle: this.weather.wind.deg * math.pi / 180,
+                        angle: (this.weather.wind.deg + 180) * math.pi / 180,
                         child: Container(
                           margin: EdgeInsets.only(bottom: 5),
                           child: Icon(WeatherIcons.windDirection, size: 15),

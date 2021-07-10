@@ -8,6 +8,9 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
 
   static const endPointHost = 'api.openweathermap.org';
   static const endPointPrefix = '/data/2.5';
+  static final defaultHeader = {
+    "user-agent": null
+  };
 
   final String apiKey;
   final http.Client httpClient;
@@ -37,7 +40,7 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
       'appid': apiKey
     };
     final uri = Uri.https(endPointHost, endPointPrefix + '/onecall', queryParameters);
-    var response = await this.httpClient.get(uri);
+    var response = await this.httpClient.get(uri, headers: defaultHeader);
 
     if (response.statusCode != 200) {
       throw Exception('error retrieving weather: status ${response.statusCode}');
@@ -53,7 +56,7 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
       'appid': apiKey
     };
     final uri = Uri.https(endPointHost, endPointPrefix + '/weather', queryParameters);
-    var response = await this.httpClient.get(uri);
+    var response = await this.httpClient.get(uri, headers: defaultHeader);
 
     if (response.statusCode != 200) {
       throw Exception('error retrieving weather: status ${response.statusCode}');
@@ -69,7 +72,7 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
       'appid': apiKey
     };
     final uri = Uri.https(endPointHost, endPointPrefix + '/forecast', queryParameters);
-    var response = await this.httpClient.get(uri);
+    var response = await this.httpClient.get(uri, headers: defaultHeader);
 
     if (response.statusCode != 200) {
       throw Exception('error retrieving weather: status ${response.statusCode}');
