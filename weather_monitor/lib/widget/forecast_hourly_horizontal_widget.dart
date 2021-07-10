@@ -29,11 +29,13 @@ class ForecastHourlyHorizontalWidget extends StatelessWidget {
           return Padding(
             padding: const EdgeInsets.only(left: 10, right: 10),
             child: Center(
-                child: ValueTile(
-                  DateFormat('E ha').format(item.dt),
-                  '${item.temp.celsius.toStringAsFixed(1)}°ᶜ',
-                  iconData: item.weather.getIconData(),
-                )),
+              child: ValueTile(
+                DateFormat('E ha').format(item.dt),
+                '${item.temp.celsius.toStringAsFixed(1)}°ᶜ',
+                iconData: item.weather.getIconData(),
+                weather: item,
+              )
+            ),
           );
         },
       ),

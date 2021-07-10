@@ -33,6 +33,7 @@ class ForecastDailyHorizontalWidget extends StatelessWidget {
                   DateFormat('EEE, MMM d').format(item.dt),
                   '${item.tempDaily.max.celsius.toStringAsFixed(1)}°ᶜ ~ ${item.tempDaily.min.celsius.toStringAsFixed(1)}°ᶜ',
                   iconData: item.weather.getIconData(),
+                  weather: item
                 )),
           );
         },
