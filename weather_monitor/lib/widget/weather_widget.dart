@@ -57,7 +57,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
       body: Center(
         child: BlocConsumer<WeatherBloc, WeatherState>(
           listener: (context, state) {
-            if (state is WeatherLoadSuccess) {
+            if ((state is WeatherLoadSuccess) || (state is WeatherLoadFailure)) {
               _refreshCompleter?.complete();
               _refreshCompleter = Completer();
             }
@@ -149,9 +149,29 @@ class _WeatherWidgetState extends State<WeatherWidget> {
               );
             }
             if (state is WeatherLoadFailure) {
-              return Text(
-                'Something went wrong!',
-                style: TextStyle(color: Theme.of(context).errorColor),
+              final String errorMessage = state.errorMessage;
+              final String city = state.city;
+              return RefreshIndicator(
+                onRefresh: () {
+                  BlocProvider.of<WeatherBloc>(context).add(
+                    WeatherRefreshRequested(city: city),
+                  );
+                  return _refreshCompleter.future;
+                },
+                child: ListView(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 100, horizontal: 10),
+                      child: Text(
+                        'Something went wrong!\n' + errorMessage,
+                        style: TextStyle(
+                          color: Theme.of(context).errorColor,
+                        ),
+                        softWrap: true,
+                      ),
+                    )
+                  ],
+                ),
               );
             }
             return EmptyWidget();

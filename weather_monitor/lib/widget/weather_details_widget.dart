@@ -40,7 +40,26 @@ class WeatherDetailsWidget extends StatelessWidget {
                 )
               ),
               ConditionalWidget(
-                condition: this.weather.rainVolumes != null,
+                condition: this.weather.rain != null,
+                widgetBuilder: (context) => Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(bottom: 5),
+                      child: Icon(WeatherIcons.rain, size: 15),
+                    ),
+                    SizedBox(width: 10),
+                    Text('Rain: ${this.weather.rain} mm',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).textTheme.bodyText1.color,
+                      )
+                    ),
+                  ],
+                )
+              ),
+              ConditionalWidget(
+                condition: (this.weather.rainVolumes != null) || (this.weather.rain != null),
                 widgetBuilder: (context) =>  SizedBox(height: 10),
               ),
               ConditionalWidget(
@@ -63,7 +82,26 @@ class WeatherDetailsWidget extends StatelessWidget {
                 )
               ),
               ConditionalWidget(
-                condition: this.weather.snowVolumes != null,
+                condition: this.weather.snow != null,
+                widgetBuilder: (context) => Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(bottom: 5),
+                      child: Icon(WeatherIcons.snow, size: 15),
+                    ),
+                    SizedBox(width: 10),
+                    Text('Rain: ${this.weather.snow} mm',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Theme.of(context).textTheme.bodyText1.color,
+                      )
+                    ),
+                  ],
+                )
+              ),
+              ConditionalWidget(
+                condition: (this.weather.snowVolumes != null) || (this.weather.snow != null),
                 widgetBuilder: (context) =>  SizedBox(height: 10),
               ),
               ConditionalWidget(

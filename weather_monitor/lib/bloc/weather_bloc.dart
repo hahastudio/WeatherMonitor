@@ -28,7 +28,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       yield WeatherLoadSuccess(weather: weather);
     } catch (e) {
       print(e);
-      yield WeatherLoadFailure();
+      yield WeatherLoadFailure(errorMessage: e.toString(), city: event.city);
     }
   }
 
@@ -38,6 +38,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       yield WeatherLoadSuccess(weather: weather);
     } catch (e) {
       print(e);
+      yield WeatherLoadFailure(errorMessage: e.toString(), city: event.city);
       // TODO: Show error message but not flush current result
     }
   }
