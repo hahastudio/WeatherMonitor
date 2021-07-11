@@ -93,6 +93,11 @@ class _WeatherWidgetState extends State<WeatherWidget> {
                       condition: weather.current.weather,
                       temp: weather.current.temp.celsius,
                       feelsLike: weather.current.feelsLike.celsius,
+                      description: weather.description,
+                    ),
+                    ConditionalWidget(
+                      condition: (weather.alerts != null) && (weather.alerts.length > 0),
+                      widgetBuilder: (context) => WeatherAlertsWidget(alerts: weather.alerts),
                     ),
                     SizedBox(height: 20),
                     WeatherDetailsWidget(weather: weather.current),

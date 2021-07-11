@@ -20,6 +20,10 @@ Future main() async {
     OpenWeatherMapWeatherApi(
       apiKey: DotEnv.env['OPENWEATHERMAP_API_KEY'],
       httpClient: http.Client()
+    ),
+    ColorfulCloudWeatherApi(
+      apiKey: DotEnv.env['COLORFULCLOUD_API_KEY'],
+      httpClient: http.Client()
     )
   );
 

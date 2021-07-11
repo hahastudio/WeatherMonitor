@@ -7,6 +7,7 @@ export 'weather_summary_widget.dart';
 export 'last_update_widget.dart';
 export 'weather_details_widget.dart';
 export 'value_title_widget.dart';
+export 'weather_alerts_widget.dart';
 export 'forecast_hourly_horizontal_widget.dart';
 export 'forecast_daily_horizontal_widget.dart';
 export 'temperature_line_chart.dart';

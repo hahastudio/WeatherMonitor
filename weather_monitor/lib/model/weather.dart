@@ -12,6 +12,7 @@ class OverAllWeather {
   String city;
   String timezone;
   int timezoneOffset;
+  String description;
   Weather current;
   List<Weather> minutely;
   List<Weather> hourly;
@@ -24,6 +25,7 @@ class OverAllWeather {
     this.city,
     this.timezone,
     this.timezoneOffset,
+    this.description,
     this.current,
     this.minutely,
     this.hourly,
@@ -529,6 +531,16 @@ class WeatherAlert {
       event: json['event'],
       start: DateTime.fromMillisecondsSinceEpoch(json['start'] * 1000),
       end: DateTime.fromMillisecondsSinceEpoch(json['end'] * 1000),
+      description: json['description'],
+    );
+  }
+
+  /// Convert Json from ColorfulCloud to WeatherAlert
+  static WeatherAlert fromColorfulCloudJson(Map<String, dynamic> json) {
+    return WeatherAlert(
+      senderName: json['source'],
+      event: json['title'],
+      start: DateTime.fromMillisecondsSinceEpoch(doubleToInt(json['pubtimestamp']) * 1000),
       description: json['description'],
     );
   }

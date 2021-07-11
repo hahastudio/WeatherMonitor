@@ -3,12 +3,21 @@ import 'package:weather_monitor/model/models.dart';
 
 class WeatherRepository {
   final WeatherApi weatherApi;
-  WeatherRepository(this.weatherApi);
+  final WeatherSubApi weatherSubApi;
+  WeatherRepository(this.weatherApi, this.weatherSubApi);
 
   Future<OverAllWeather> getOverAllWeather(String city) async {
     var location = await weatherApi.getLocation(city);
     var weather = await weatherApi.getOverAllWeather(location);
     weather.city = city;
+    try {
+      var weatherSub = await weatherSubApi.getOverAllWeather(location);
+      weather.description = weatherSub.description;
+      weather.alerts = weatherSub.alerts;
+    } catch (e) {
+      print(e);
+    }
+    
     return weather;
   }
 
