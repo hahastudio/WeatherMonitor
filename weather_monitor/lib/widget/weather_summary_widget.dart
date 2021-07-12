@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:strings/strings.dart';
 import 'package:weather_monitor/model/models.dart';
+import 'package:weather_monitor/widget/conditional_widget.dart';
 
 class WeatherSummaryWidget extends StatelessWidget {
   final String description;
@@ -62,18 +63,22 @@ class WeatherSummaryWidget extends StatelessWidget {
             ]
           ),
         ),
-        SizedBox(
-          height: 10,
+        ConditionalWidget(
+          condition: (this.description != null),
+          widgetBuilder: (context) => SizedBox(height: 10),
         ),
-        Center(
-          child: Text(
-            this.description,
-            style: TextStyle(
-              fontSize: 16,
-              color: Theme.of(context).textTheme.bodyText1.color,
+        ConditionalWidget(
+          condition: (this.description != null),
+          widgetBuilder: (context) => Center(
+            child: Text(
+              this.description,
+              style: TextStyle(
+                fontSize: 16,
+                color: Theme.of(context).textTheme.bodyText1.color,
+              ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

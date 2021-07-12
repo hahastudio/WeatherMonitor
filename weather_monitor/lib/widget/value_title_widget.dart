@@ -23,10 +23,13 @@ class ValueTile extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
           ),
-          insetPadding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 250.0),
           elevation: 0,
           backgroundColor: Theme.of(context).backgroundColor,
-          child: WeatherDetailsWidget(weather: weather),
+          child: Container(
+            width: double.minPositive,
+            height: 240,
+            child: WeatherDetailsWidget(weather: weather),
+          ),
         );
       },
     );

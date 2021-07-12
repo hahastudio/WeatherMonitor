@@ -99,7 +99,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
                       condition: (weather.alerts != null) && (weather.alerts.length > 0),
                       widgetBuilder: (context) => WeatherAlertsWidget(alerts: weather.alerts),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     WeatherDetailsWidget(weather: weather.current),
                     Padding(
                       child: Divider(
