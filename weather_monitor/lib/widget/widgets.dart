@@ -14,3 +14,4 @@ export 'temperature_line_chart.dart';
 export 'rain_line_chart.dart';
 export 'wind_line_chart.dart';
 export 'settings_list_widget.dart';
+export 'wind_map_widget.dart';

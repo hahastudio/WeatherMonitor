@@ -148,7 +148,14 @@ class _WeatherWidgetState extends State<WeatherWidget> {
                     WindLineChart(
                       weather.hourly,
                       animate: true,
-                    )
+                    ),
+                    Padding(
+                      child: Divider(
+                          color: Theme.of(context).textTheme.bodyText2.color
+                      ),
+                      padding: EdgeInsets.all(10),
+                    ),
+                    WindMapWidget(Location(latitude: weather.latitude, longitude: weather.longitude))
                   ],
                 ),
               );
