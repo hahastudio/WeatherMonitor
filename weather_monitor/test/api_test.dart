@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:flutter_dotenv/flutter_dotenv.dart' as DotEnv;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:weather_monitor/api/apis.dart';
@@ -9,7 +9,7 @@ import 'util/test_util.dart';
 
 Future main() async {
   TestWidgetsFlutterBinding.ensureInitialized();
-  await DotEnv.load();
+  await dotenv.load();
 
   group('OpenWeatherMap API test', () {
 
@@ -18,7 +18,7 @@ Future main() async {
 
     setUpAll(() {
       HttpOverrides.global = null;
-      apiKey = DotEnv.env['OPENWEATHERMAP_API_KEY'];
+      apiKey = dotenv.env['OPENWEATHERMAP_API_KEY'];
       httpClient = http.Client();
     });
 

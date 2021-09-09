@@ -29,15 +29,22 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.0
   http: ^0.13.0
-  flutter_dotenv: ^3.1.0
-  flutter_bloc: ^6.1.1
+  flutter_dotenv: ^5.0.2
+  flutter_bloc: ^7.1.0
   equatable: ^2.0.0
   intl: ^0.17.0
-  charts_flutter: ^0.10.0
-  shared_preferences: '>=0.5.12+4 <2.0.0'
+  charts_flutter: ^0.11.0
+  shared_preferences: ^2.0.7
   strings: ^0.2.1
   flutter_settings_screens: ^0.2.1+1
   webview_flutter: ^2.0.10
+
+# TODO: check https://github.com/google/charts/issues/669
+dependency_overrides:
+ charts_flutter:
+    git:
+      url: https://github.com/google/charts
+      path: charts_flutter
 
 dev_dependencies:
   flutter_test:
