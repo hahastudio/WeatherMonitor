@@ -2,6 +2,7 @@ import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 import 'package:weather_monitor/bloc/blocs.dart';
 import 'package:weather_monitor/model/models.dart';
+import 'package:weather_monitor/notification_service.dart';
 import 'package:weather_monitor/repository/repositories.dart';
 
 
@@ -25,6 +26,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     yield WeatherLoadInProgress();
     try {
       final OverAllWeather weather = await weatherRepository.getOverAllWeather(event.city);
+      NotificationService().sendWeatherAlertNotification(weather);
       yield WeatherLoadSuccess(weather: weather);
     } catch (e) {
       print(e);
@@ -35,6 +37,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   Stream<WeatherState> _mapWeatherRefreshRequestedToState(WeatherRefreshRequested event) async* {
     try {
       final OverAllWeather weather = await weatherRepository.getOverAllWeather(event.city);
+      NotificationService().sendWeatherAlertNotification(weather);
       yield WeatherLoadSuccess(weather: weather);
     } catch (e) {
       print(e);

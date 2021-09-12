@@ -38,6 +38,7 @@ dependencies:
   strings: ^0.2.1
   flutter_settings_screens: ^0.2.1+1
   webview_flutter: ^2.0.10
+  flutter_local_notifications: ^8.2.0
 
 # TODO: check https://github.com/google/charts/issues/669
 dependency_overrides:
