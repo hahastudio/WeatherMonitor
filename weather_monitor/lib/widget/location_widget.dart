@@ -14,9 +14,13 @@ class LocationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String cityName = this.city;
+    if (cityName.startsWith('::geolocation_'))
+      cityName = cityName.substring(14);
+
     return Center(
       child: Column(children: [
-        Text('${this.city.toUpperCase()}',
+        Text('${cityName.toUpperCase()}',
             style: TextStyle(
               fontSize: 40,
               fontWeight: FontWeight.w300,

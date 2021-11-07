@@ -21,6 +21,7 @@ class _CitySelectionWidgetState extends State<CitySelectionWidget> {
     await prefs.setString('city', _city.name);
     await prefs.setDouble('city.coordinate.longitude', _city.coordinate.longitude);
     await prefs.setDouble('city.coordinate.latitude', _city.coordinate.latitude);
+    await prefs.setString('weather', '');
   }
 
   @override
@@ -73,9 +74,7 @@ class _CitySelectionWidgetState extends State<CitySelectionWidget> {
       },
       onSelected: (City selection) async {
         city = selection;
-        setState(
-                () => _textController.text = selection.name
-        );
+        setState(() => _textController.text = selection.name);
         await saveCity(city);
         Navigator.pop(context, _textController.text);
       },
@@ -86,13 +85,43 @@ class _CitySelectionWidgetState extends State<CitySelectionWidget> {
         title: Text('City'),
       ),
       body: Form(
-        child: Row(
+        child: Column(
           children: [
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                child: autoCompleteInput,
-              ),
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(top: 5.0, right: 10.0),
+                  child: TextButton.icon(
+                    onPressed: () async {
+                      var city = City(
+                          name: '::geolocation_',
+                          coordinate: Location(
+                              latitude: 0,
+                              longitude: 0
+                          )
+                      );
+                      await saveCity(city);
+                      Navigator.pop(context, city.name);
+                    },
+                    icon: Icon(Icons.gps_fixed, size: 18),
+                    label: Text("Use current location",
+                      style: TextStyle(
+                        fontSize: 18,
+                      )
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                    child: autoCompleteInput,
+                  ),
+                )
+              ],
             )
           ],
         ),

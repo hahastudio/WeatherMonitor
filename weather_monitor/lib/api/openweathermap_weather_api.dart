@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_monitor/api/apis.dart';
+import 'package:weather_monitor/location_service.dart';
 import 'package:weather_monitor/model/models.dart';
 
 class OpenWeatherMapWeatherApi extends WeatherApi {
@@ -23,12 +24,16 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
 
   @override
   Future<Location> getLocation(String city) async {
-    final SharedPreferences prefs = await _prefs;
-    //FIXME: location may not be saved
-    var latitude = prefs.getDouble('city.coordinate.latitude');
-    var longitude = prefs.getDouble('city.coordinate.longitude');
+    if ((city != null) && (city.startsWith('::geolocation_'))) {
+      return await LocationService().getLocation();
+    } else {
+      final SharedPreferences prefs = await _prefs;
+      //FIXME: location may not be saved
+      var latitude = prefs.getDouble('city.coordinate.latitude');
+      var longitude = prefs.getDouble('city.coordinate.longitude');
 
-    return Location(latitude: latitude, longitude: longitude);
+      return Location(latitude: latitude, longitude: longitude);
+    }
   }
 
   @override
@@ -46,7 +51,28 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
       throw Exception('error retrieving weather: status ${response.statusCode}');
     }
 
-    return OverAllWeather.fromJson(jsonDecode(response.body));
+    var overAllWeather = OverAllWeather.fromJson(jsonDecode(response.body));
+    var city = await getCityName(location);
+    overAllWeather.city = city;
+
+    return overAllWeather;
+  }
+
+  Future<String> getCityName(Location location) async {
+    var queryParameters = {
+      'lat': location.latitude.toString(),
+      'lon': location.longitude.toString(),
+      'appid': apiKey
+    };
+    final uri = Uri.https(endPointHost, endPointPrefix + '/weather', queryParameters);
+    var response = await this.httpClient.get(uri, headers: defaultHeader);
+
+    if (response.statusCode != 200) {
+      throw Exception('error retrieving city name: status ${response.statusCode}');
+    }
+
+    Map responseJson = jsonDecode(response.body);
+    return responseJson['name'];
   }
 
   @override

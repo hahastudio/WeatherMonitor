@@ -9,7 +9,13 @@ class WeatherRepository {
   Future<OverAllWeather> getOverAllWeather(String city) async {
     var location = await weatherApi.getLocation(city);
     var weather = await weatherApi.getOverAllWeather(location);
-    weather.city = city;
+
+    if ((city != null) && (city.startsWith('::geolocation_'))) {
+      weather.city = '::geolocation_' + weather.city;
+    } else {
+      weather.city = city;
+    }
+
     try {
       var weatherSub = await weatherSubApi.getOverAllWeather(location);
       weather.description = weatherSub.description;

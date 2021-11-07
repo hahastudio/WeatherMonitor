@@ -39,6 +39,7 @@ dependencies:
   flutter_settings_screens: ^0.2.1+1
   webview_flutter: ^2.0.10
   flutter_local_notifications: ^8.2.0
+  location: ^4.3.0
 
 dev_dependencies:
   flutter_test:
