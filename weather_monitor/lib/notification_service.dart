@@ -15,11 +15,11 @@ class NotificationService {
         FlutterLocalNotificationsPlugin();
   }
 
-  void sendWeatherAlertNotification(OverAllWeather weather) async {
+  void sendWeatherAlertNotification(List<WeatherAlert> weatherAlerts, String city) async {
     try {
-      if ((weather == null) || (weather.alerts == null) || (weather.alerts.length == 0))
+      if ((weatherAlerts == null) || (weatherAlerts.length == 0))
         return;
-      weather.alerts.asMap().forEach((int i, WeatherAlert alert) async {
+      weatherAlerts.asMap().forEach((int i, WeatherAlert alert) async {
         BigTextStyleInformation bigTextStyleInformation =
         BigTextStyleInformation(
           alert.description,
@@ -41,7 +41,7 @@ class NotificationService {
         NotificationDetails(android: androidPlatformChannelSpecifics);
         await _flutterLocalNotificationsPlugin.show(
             i, alert.event, alert.description, platformChannelSpecifics,
-            payload: weather.city);
+            payload: city);
       });
     } catch (e) {
       print('Send notification failed.');

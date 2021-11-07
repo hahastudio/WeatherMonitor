@@ -505,6 +505,8 @@ class TemperatureStat {
 
 /// National weather alerts data from major national weather warning systems
 class WeatherAlert {
+  /// Alert Id
+  String id;
   /// Name of the alert source.
   String senderName;
   /// Alert event name
@@ -517,6 +519,7 @@ class WeatherAlert {
   String description;
 
   WeatherAlert({
+    this.id,
     this.senderName,
     this.event,
     this.start,
@@ -527,6 +530,7 @@ class WeatherAlert {
   /// Convert Json to WeatherAlert
   static WeatherAlert fromJson(Map<String, dynamic> json) {
     return WeatherAlert(
+      id: json['id'] ?? json['sender_name'] + '_' + json['event'] + '_' + json['start'].toString(),
       senderName: json['sender_name'],
       event: json['event'],
       start: json['start'] != null ? DateTime.fromMillisecondsSinceEpoch(doubleToInt(json['start']) * 1000) : null,
@@ -538,6 +542,7 @@ class WeatherAlert {
   /// Convert Json from ColorfulCloud to WeatherAlert
   static WeatherAlert fromColorfulCloudJson(Map<String, dynamic> json) {
     return WeatherAlert(
+      id: json['alertId'],
       senderName: json['source'],
       event: json['title'],
       start: DateTime.fromMillisecondsSinceEpoch(doubleToInt(json['pubtimestamp']) * 1000),
@@ -555,6 +560,7 @@ class WeatherAlert {
   }
 
   Map<String, dynamic> toJson() => {
+    'id': id,
     'sender_name': senderName,
     'event': event,
     'start': start != null ? start.millisecondsSinceEpoch / 1000 : null,
