@@ -69,14 +69,17 @@ class WeatherSummaryWidget extends StatelessWidget {
         ),
         ConditionalWidget(
           condition: (this.description != null),
-          widgetBuilder: (context) => Center(
-            child: Text(
-              this.description,
-              style: TextStyle(
-                fontSize: 16,
-                color: Theme.of(context).textTheme.bodyText1.color,
+          widgetBuilder: (context) => Container(
+            padding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
+            child: Center(
+              child: Text(
+                this.description,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Theme.of(context).textTheme.bodyText1.color,
+                ),
               ),
-            ),
+            )
           ),
         ),
       ],

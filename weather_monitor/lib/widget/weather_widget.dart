@@ -29,9 +29,9 @@ class _WeatherWidgetState extends State<WeatherWidget> {
     // city
     String city = prefs.getString('city') ?? '';
 
-    if (city != null && city != '')
+    if (city != '')
       BlocProvider.of<WeatherBloc>(context)
-          .add(WeatherRequested(city: city));
+          .add(WeatherInitiated(city: city));
     // theme
     bool isDarkTheme = Settings.getValue<bool>('settings.isDarkMode', false);
     BlocProvider.of<ThemeBloc>(context)

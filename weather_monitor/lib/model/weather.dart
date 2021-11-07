@@ -150,9 +150,9 @@ class Weather {
   /// Convert Json to Weather object
   static Weather fromJson(Map<String, dynamic> json) {
     var result = Weather(
-      dt: DateTime.fromMillisecondsSinceEpoch(json['dt'] * 1000),
-      sunrise: json['sunrise'] != null ? DateTime.fromMillisecondsSinceEpoch(json['sunrise'] * 1000) : null,
-      sunset: json['sunset'] != null ? DateTime.fromMillisecondsSinceEpoch(json['sunset'] * 1000) : null,
+      dt: DateTime.fromMillisecondsSinceEpoch(doubleToInt(json['dt']) * 1000),
+      sunrise: json['sunrise'] != null ? DateTime.fromMillisecondsSinceEpoch(doubleToInt(json['sunrise']) * 1000) : null,
+      sunset: json['sunset'] != null ? DateTime.fromMillisecondsSinceEpoch(doubleToInt(json['sunset']) * 1000) : null,
       pressure: intToDouble(json['pressure']),
       humidity: intToDouble(json['humidity']),
       dewPoint: Temperature(intToDouble(json['dew_point'])),
@@ -529,8 +529,8 @@ class WeatherAlert {
     return WeatherAlert(
       senderName: json['sender_name'],
       event: json['event'],
-      start: DateTime.fromMillisecondsSinceEpoch(json['start'] * 1000),
-      end: DateTime.fromMillisecondsSinceEpoch(json['end'] * 1000),
+      start: json['start'] != null ? DateTime.fromMillisecondsSinceEpoch(doubleToInt(json['start']) * 1000) : null,
+      end: json['end'] != null ? DateTime.fromMillisecondsSinceEpoch(doubleToInt(json['end']) * 1000) : null,
       description: json['description'],
     );
   }
@@ -557,8 +557,8 @@ class WeatherAlert {
   Map<String, dynamic> toJson() => {
     'sender_name': senderName,
     'event': event,
-    'start': start.millisecondsSinceEpoch / 1000,
-    'end': end.millisecondsSinceEpoch / 1000,
+    'start': start != null ? start.millisecondsSinceEpoch / 1000 : null,
+    'end': end != null ? end.millisecondsSinceEpoch / 1000 : null,
     'description': description
   };
 }
@@ -613,7 +613,7 @@ class CurrentWeather {
   /// Convert Json to CurrentWeather
   static CurrentWeather fromJson(Map<String, dynamic> json) {
     return CurrentWeather(
-      dt: DateTime.fromMillisecondsSinceEpoch(json['dt'] * 1000),
+      dt: DateTime.fromMillisecondsSinceEpoch(doubleToInt(json['dt']) * 1000),
       main: ForecastMainWeather.fromJson(json['main']),
       weather: WeatherCondition.fromJson(json['weather'][0]),
       clouds: json['clouds'] != null ? Cloud.fromJson(json['clouds']) : null,
@@ -625,8 +625,8 @@ class CurrentWeather {
       coordinate: Location.fromJson(json['coord']),
       timezone: json['timezone'],
       country: json['sys']['country'],
-      sunrise: DateTime.fromMillisecondsSinceEpoch(json['sys']['sunrise'] * 1000),
-      sunset: DateTime.fromMillisecondsSinceEpoch(json['sys']['sunset'] * 1000),
+      sunrise: DateTime.fromMillisecondsSinceEpoch(doubleToInt(json['sys']['sunrise']) * 1000),
+      sunset: DateTime.fromMillisecondsSinceEpoch(doubleToInt(json['sys']['sunset']) * 1000),
     );
   }
 
@@ -718,7 +718,7 @@ class ForecastWeather {
   /// Convert Json to ForecastWeather
   static ForecastWeather fromJson(Map<String, dynamic> json) {
     return ForecastWeather(
-      dt: DateTime.fromMillisecondsSinceEpoch(json['dt'] * 1000),
+      dt: DateTime.fromMillisecondsSinceEpoch(doubleToInt(json['dt']) * 1000),
       main: ForecastMainWeather.fromJson(json['main']),
       weather: WeatherCondition.fromJson(json['weather'][0]),
       clouds: json['clouds'] != null ? Cloud.fromJson(json['clouds']) : null,

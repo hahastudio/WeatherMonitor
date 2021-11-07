@@ -33,19 +33,12 @@ dependencies:
   flutter_bloc: ^7.1.0
   equatable: ^2.0.0
   intl: ^0.17.0
-  charts_flutter: ^0.11.0
+  charts_flutter: ^0.12.0
   shared_preferences: ^2.0.7
   strings: ^0.2.1
   flutter_settings_screens: ^0.2.1+1
   webview_flutter: ^2.0.10
   flutter_local_notifications: ^8.2.0
-
-# TODO: check https://github.com/google/charts/issues/669
-dependency_overrides:
- charts_flutter:
-    git:
-      url: https://github.com/google/charts
-      path: charts_flutter
 
 dev_dependencies:
   flutter_test:
