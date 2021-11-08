@@ -58,9 +58,8 @@ class NotificationService {
       selectedNotificationPayload = notificationAppLaunchDetails.payload;
     }
 
-    //TODO: change icon
     const AndroidInitializationSettings initializationSettingsAndroid =
-    AndroidInitializationSettings('ic_launcher');
+    AndroidInitializationSettings('ic_stat_notification');
 
     final InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,

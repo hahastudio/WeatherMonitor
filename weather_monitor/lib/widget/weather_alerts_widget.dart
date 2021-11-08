@@ -21,12 +21,7 @@ class WeatherAlertsWidget extends StatelessWidget {
         shrinkWrap: true,
         primary: false,
         itemCount: this.alerts.length,
-        separatorBuilder: (context, index) => Padding(
-          child: Divider(
-              color: Theme.of(context).textTheme.bodyText2.color
-          ),
-          padding: EdgeInsets.all(10),
-        ),
+        separatorBuilder: (context, index) => EmptyWidget(),
         itemBuilder: (context, index) {
           final item = this.alerts[index];
           return Center(
