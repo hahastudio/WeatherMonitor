@@ -38,4 +38,8 @@ class LocationService {
     return cityModel.Location(latitude: currentPosition.latitude, longitude: currentPosition.longitude);
   }
 
+  Future init() async {
+    this._location.enableBackgroundMode(enable: true);
+  }
+
 }

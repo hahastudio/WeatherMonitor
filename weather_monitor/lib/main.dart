@@ -1,25 +1,31 @@
+import 'dart:isolate';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_monitor/model/theme.dart';
 
 import 'api/apis.dart';
+import 'background_service.dart';
 import 'bloc/blocs.dart';
+import 'location_service.dart';
 import 'notification_service.dart';
 import 'repository/repositories.dart';
 import 'simple_bloc_observer.dart';
 import 'widget/widgets.dart';
 
 Future main() async {
+  print('[Main] app launched');
   await dotenv.load(fileName: ".env");
   await Settings.init();
   // needed if you intend to initialize in the `main` function
   WidgetsFlutterBinding.ensureInitialized();
 
-  Bloc.observer = SimpleBlocObserver();
   final WeatherRepository weatherRepository = WeatherRepository(
     OpenWeatherMapWeatherApi(
       apiKey: dotenv.env['OPENWEATHERMAP_API_KEY'],
@@ -30,17 +36,48 @@ Future main() async {
       httpClient: http.Client()
     )
   );
+  var weatherBloc = WeatherBloc(weatherRepository: weatherRepository);
+  GetIt.instance.registerSingleton<WeatherBloc>(weatherBloc);
+  Bloc.observer = SimpleBlocObserver();
 
   await NotificationService().init();
+  await LocationService().init();
+  await BackgroundService().init();
 
-  runApp(WeatherApp(weatherRepository: weatherRepository,));
+  var port = ReceivePort();
+  if (IsolateNameServer.lookupPortByName('backgroundCallbackChannel') != null)
+    IsolateNameServer.removePortNameMapping('backgroundCallbackChannel');
+  var registerResult = IsolateNameServer.registerPortWithName(port.sendPort, 'backgroundCallbackChannel');
+  if (!registerResult)
+    print('[Main] failed to register port');
+  port.listen((dynamic data) async {
+    print('[Main][backgroundCallbackChannel listener] got $data');
+    var task = data.toString();
+    switch (task) {
+      case 'WeatherRequested':
+        final prefs = await SharedPreferences.getInstance();
+        String city = prefs.getString('city') ?? '';
+        if (city != '')
+          weatherBloc.add(WeatherRequested(city: city));
+        break;
+      case 'WeatherRefreshRequested':
+        final prefs = await SharedPreferences.getInstance();
+        String city = prefs.getString('city') ?? '';
+        if (city != '')
+          weatherBloc.add(WeatherRefreshRequested(city: city));
+        break;
+    }
+    print('[Main][backgroundCallbackChannel listener] finished processing $data');
+  });
+  BackgroundService().registerWeatherRefreshPeriodicTask();
+  print('[Main] main initialization finished');
+
+  runApp(WeatherApp());
 }
 
 class WeatherApp extends StatelessWidget {
-  final WeatherRepository weatherRepository;
-  WeatherApp({Key key, @required this.weatherRepository})
-      : assert(weatherRepository != null),
-        super(key: key);
+  WeatherApp()
+      : super();
 
   // This widget is the root of your application.
   @override
@@ -49,7 +86,7 @@ class WeatherApp extends StatelessWidget {
         providers: [
           BlocProvider<WeatherBloc>(
               create: (context) =>
-                  WeatherBloc(weatherRepository: weatherRepository)
+                GetIt.instance<WeatherBloc>()
           ),
           BlocProvider<ThemeBloc>(
               create: (context) =>
