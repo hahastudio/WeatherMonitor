@@ -42,6 +42,7 @@ class NotificationService {
         await _flutterLocalNotificationsPlugin.show(
             i, alert.event, alert.description, platformChannelSpecifics,
             payload: city);
+        print('Weather alert notification sent');
       });
     } catch (e) {
       print('Send notification failed.');

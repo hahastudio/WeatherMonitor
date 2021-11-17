@@ -24,16 +24,20 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
 
   @override
   Future<Location> getLocation(String city) async {
-    if ((city != null) && (city.startsWith('::geolocation_'))) {
-      return await LocationService().getLocation();
-    } else {
-      final SharedPreferences prefs = await _prefs;
-      //FIXME: location may not be saved
-      var latitude = prefs.getDouble('city.coordinate.latitude');
-      var longitude = prefs.getDouble('city.coordinate.longitude');
-
-      return Location(latitude: latitude, longitude: longitude);
+    try {
+      if ((city != null) && (city.startsWith('::geolocation_'))) {
+        return await LocationService().getLocation();
+      }
+    } catch (e) {
+      print(e);
     }
+
+    final SharedPreferences prefs = await _prefs;
+    //FIXME: location may not be saved
+    var latitude = prefs.getDouble('city.coordinate.latitude');
+    var longitude = prefs.getDouble('city.coordinate.longitude');
+
+    return Location(latitude: latitude, longitude: longitude);
   }
 
   @override
@@ -45,8 +49,9 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
       'appid': apiKey
     };
     final uri = Uri.https(endPointHost, endPointPrefix + '/onecall', queryParameters);
+    print('[OpenWeatherMapApi] getOverAllWeather requested');
     var response = await this.httpClient.get(uri, headers: defaultHeader);
-
+    print('[OpenWeatherMapApi] getOverAllWeather responded');
     if (response.statusCode != 200) {
       throw Exception('error retrieving weather: status ${response.statusCode}');
     }
@@ -65,8 +70,9 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
       'appid': apiKey
     };
     final uri = Uri.https(endPointHost, endPointPrefix + '/weather', queryParameters);
+    print('[OpenWeatherMapApi] getCityName requested');
     var response = await this.httpClient.get(uri, headers: defaultHeader);
-
+    print('[OpenWeatherMapApi] getCityName responded');
     if (response.statusCode != 200) {
       throw Exception('error retrieving city name: status ${response.statusCode}');
     }
@@ -82,8 +88,9 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
       'appid': apiKey
     };
     final uri = Uri.https(endPointHost, endPointPrefix + '/weather', queryParameters);
+    print('[OpenWeatherMapApi] getCurrentWeather requested');
     var response = await this.httpClient.get(uri, headers: defaultHeader);
-
+    print('[OpenWeatherMapApi] getCurrentWeather responded');
     if (response.statusCode != 200) {
       throw Exception('error retrieving weather: status ${response.statusCode}');
     }

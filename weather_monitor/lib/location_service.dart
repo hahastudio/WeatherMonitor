@@ -1,4 +1,6 @@
+import 'package:flutter/services.dart';
 import 'package:location/location.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'model/city.dart' as cityModel;
 
 class LocationService {
@@ -14,11 +16,22 @@ class LocationService {
     this._location = Location();
   }
 
+  Future<bool> initLocation(Location loc, {int limit = 10}) async {
+    for (int i = 0; i < limit; i++) {
+      try {
+        return await loc.serviceEnabled();
+      } on PlatformException {
+        await Future.delayed(Duration(milliseconds: 300));
+      }
+    }
+    throw Exception('Failed to initialize location service.');
+  }
+
   Future<cityModel.Location> getLocation() async {
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
 
-    _serviceEnabled = await this._location.serviceEnabled();
+    _serviceEnabled = await initLocation(this._location);
     if (!_serviceEnabled) {
       _serviceEnabled = await this._location.requestService();
       if (!_serviceEnabled) {
@@ -35,11 +48,38 @@ class LocationService {
     }
 
     LocationData currentPosition = await this._location.getLocation();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('city.coordinate.latitude', currentPosition.latitude);
+    await prefs.setDouble('city.coordinate.longitude', currentPosition.longitude);
     return cityModel.Location(latitude: currentPosition.latitude, longitude: currentPosition.longitude);
   }
 
+  Future backgroundInit() async {
+    var enabled = await this._location.enableBackgroundMode(enable: true);
+    if (!enabled) {
+      print('Location service failed to run in background mode.');
+    }
+  }
+
   Future init() async {
-    this._location.enableBackgroundMode(enable: true);
+    var enabled = await this._location.enableBackgroundMode(enable: true);
+    if (!enabled) {
+      print('Location service failed to run in background mode.');
+    } else {
+      /*
+      this._location.changeSettings(interval: 5 * 60 * 1000);
+      this._location.onLocationChanged.listen((LocationData currentLocation) async {
+        try {
+          print('Location changed');
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setDouble('city.coordinate.latitude', currentLocation.latitude);
+          await prefs.setDouble('city.coordinate.longitude', currentLocation.longitude);
+        } catch (e) {
+          print(e);
+        }
+      });
+      */
+    }
   }
 
 }

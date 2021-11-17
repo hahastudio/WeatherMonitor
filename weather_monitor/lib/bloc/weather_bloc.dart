@@ -25,6 +25,8 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       yield* _mapWeatherRequestedToState(event);
     } else if (event is WeatherRefreshRequested) {
       yield* _mapWeatherRefreshRequestedToState(event);
+    } else if (event is WeatherBackgroundRefreshRequested) {
+      yield* _mapWeatherBackgroundRefreshRequestedToState(event);
     }
   }
 
@@ -54,41 +56,17 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   Stream<WeatherState> _mapWeatherRefreshRequestedToState(WeatherRefreshRequested event) async* {
     try {
       final OverAllWeather weather = await weatherRepository.getOverAllWeather(event.city);
-      if (weather != null) {
-        final SharedPreferences prefs = await _prefs;
-        await prefs.setString('weather', jsonEncode(weather.toJson()));
-        if ((weather.alerts != null) && (weather.alerts.length > 0)) {
-          List<String> alertJsons = prefs.getStringList('weatherAlerts');
-          List<WeatherAlert> alertsSaved = [];
-          if ((alertJsons != null) && (alertJsons.length > 0)) {
-            for (final alertJson in alertJsons) {
-              if (alertJson != null) {
-                Map alertMap = json.decode(alertJson);
-                alertsSaved.add(WeatherAlert.fromJson(alertMap));
-              }
-            }
-          }
-
-          List<WeatherAlert> alertsToSend = [];
-          for (final weatherAlert in weather.alerts) {
-            if (!alertsSaved.any((element) => element.id == weatherAlert.id)) {
-              alertsToSend.add(weatherAlert);
-            }
-          }
-          if (alertsToSend.length > 0)
-            NotificationService().sendWeatherAlertNotification(alertsToSend, weather.city);
-
-          List<WeatherAlert> alertsToSave = alertsSaved + alertsToSend;
-          alertsToSave.removeWhere((element) => element.start.isBefore(DateTime.now().add(Duration(days: -7))));
-          List<String> alertsToSaveJsons = alertsToSave.map((element) => jsonEncode(element.toJson())).toList();
-          await prefs.setStringList('weatherAlerts', alertsToSaveJsons);
-        }
-      }
       yield WeatherLoadSuccess(weather: weather);
     } catch (e) {
       print(e);
       yield WeatherLoadFailure(errorMessage: e.toString(), city: event.city);
       // TODO: Show error message but not flush current result
     }
+  }
+
+  Stream<WeatherState> _mapWeatherBackgroundRefreshRequestedToState(WeatherBackgroundRefreshRequested event) async* {
+    yield WeatherLoadInProgress();
+    await Future.delayed(Duration(seconds: 1));
+    yield* _mapWeatherInitiatedToState(WeatherInitiated(city: event.city));
   }
 }

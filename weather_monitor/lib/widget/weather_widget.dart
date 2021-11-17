@@ -71,6 +71,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
             }
             if (state is WeatherLoadSuccess) {
               final weather = state.weather;
+              print('weather updated on ${weather.current.dt} will be rendered.');
 
               return RefreshIndicator(
                 onRefresh: () {

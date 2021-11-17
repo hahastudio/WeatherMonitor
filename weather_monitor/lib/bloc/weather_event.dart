@@ -31,3 +31,12 @@ class WeatherRefreshRequested extends WeatherEvent {
   @override
   List<Object> get props => [city];
 }
+
+class WeatherBackgroundRefreshRequested extends WeatherEvent {
+  final String city;
+
+  const WeatherBackgroundRefreshRequested({@required this.city}) : assert(city != null);
+
+  @override
+  List<Object> get props => [city];
+}

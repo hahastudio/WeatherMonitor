@@ -29,8 +29,9 @@ class ColorfulCloudWeatherApi extends WeatherSubApi {
       'alert': 'true',
     };
     final uri = Uri.https(endPointHost, endPointPrefix + '/${apiKey}/${location.longitude.toStringAsFixed(6)},${location.latitude.toStringAsFixed(6)}/weather.json', queryParameters);
+    print('[ColorfulCloudApi] getOverAllWeather requested');
     var response = await this.httpClient.get(uri, headers: defaultHeader);
-
+    print('[ColorfulCloudApi] getOverAllWeather responded');
     if (response.statusCode != 200) {
       return OverAllWeather();
     }
