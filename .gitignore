@@ -87,3 +87,4 @@ lint/tmp/
 # customize
 Design/
 *.pcap
+weather_monitor/.env
