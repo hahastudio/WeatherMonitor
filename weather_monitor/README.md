@@ -1,4 +1,4 @@
-# weather_monitor
+# Weather Monitor
 
 A weather app that utilizes multiple data sources.
 
@@ -15,10 +15,16 @@ For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-
 ## How to build
 
+### Prepare API Key
+
 This project uses package [flutter_dotenv](https://pub.dev/packages/flutter_dotenv) to store configurations.
+
+Sign up and get API keys from:
+
+- [OpenWeather API](https://openweathermap.org/api)
+- [Colorful Clouds API](https://open.caiyunapp.com/ColorfulClouds_Weather_API)
 
 In `.env`, paste api key like:
 
@@ -28,6 +34,12 @@ COLORFULCLOUD_API_KEY=TAkhjf8d1nlSlspN
 ```
 
 Colorful Clouds API Key can be ignored.
+
+### Prepare city list file
+
+From [OpenWeather samples](https://bulk.openweathermap.org/sample/), download [current.city.list.min.json.gz](https://bulk.openweathermap.org/sample/current.city.list.min.json.gz), unzip and put into `/assets/current.city.list.min.json`.
+
+### Build Flutter project
 
 Get flutter package:
 
