@@ -62,7 +62,12 @@ class LocationService {
   }
 
   Future init() async {
-    var enabled = await this._location.enableBackgroundMode(enable: true);
+    var enabled = false;
+    try {
+      enabled = await this._location.enableBackgroundMode(enable: true);
+    } catch (e) {
+      print(e);
+    }
     if (!enabled) {
       print('Location service failed to run in background mode.');
     } else {
