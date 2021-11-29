@@ -42,6 +42,7 @@ class OverAllWeather {
       timezone: json['timezone'],
       timezoneOffset: json['timezone_offset'],
       current: json['current'] != null ? Weather.fromJson(json['current']) : null,
+      description: json['description']
     );
     if (json['minutely'] != null) {
       result.minutely = Weather.fromListJson(json['minutely']);
@@ -65,6 +66,7 @@ class OverAllWeather {
     result['city'] = city;
     result['timezone'] = timezone;
     result['timezone_offset'] = timezoneOffset;
+    result['description'] = description;
     if (current != null)
       result['current'] = current.toJson();
     if (minutely != null)
