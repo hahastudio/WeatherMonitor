@@ -7,6 +7,8 @@ import 'package:weather_monitor/bloc/blocs.dart';
 import 'package:weather_monitor/model/models.dart';
 import 'package:weather_monitor/widget/widgets.dart';
 
+import '../location_service.dart';
+
 
 class WeatherWidget extends StatefulWidget {
   State<WeatherWidget> createState() => _WeatherWidgetState();
@@ -201,6 +203,9 @@ class _WeatherWidgetState extends State<WeatherWidget> {
             ),
           );
           if (city != null) {
+            if (city.startsWith('::geolocation_')) {
+              await LocationService().init();
+            }
             BlocProvider.of<WeatherBloc>(context)
                 .add(WeatherRequested(city: city));
           }

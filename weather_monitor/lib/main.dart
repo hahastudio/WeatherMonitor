@@ -23,6 +23,8 @@ import 'widget/widgets.dart';
 Future main() async {
   print('[Main] app launched');
   await dotenv.load(fileName: ".env");
+  final prefs = await SharedPreferences.getInstance();
+  String city = prefs.getString('city') ?? '';
   await Settings.init();
   // needed if you intend to initialize in the `main` function
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +44,9 @@ Future main() async {
   Bloc.observer = SimpleBlocObserver();
 
   await NotificationService().init();
-  await LocationService().init();
+  if ((city != null) && (city.startsWith('::geolocation_'))) {
+    await LocationService().init();
+  }
   await BackgroundService().init();
 
   var port = ReceivePort();
