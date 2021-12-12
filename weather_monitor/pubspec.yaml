@@ -30,19 +30,17 @@ dependencies:
   cupertino_icons: ^1.0.0
   http: ^0.13.0
   flutter_dotenv: ^5.0.2
-  flutter_bloc: ^7.1.0
+  flutter_bloc: ^8.0.0
   equatable: ^2.0.0
   intl: ^0.17.0
   charts_flutter: ^0.12.0
   shared_preferences: ^2.0.7
-  strings: ^0.2.1
-  flutter_settings_screens: ^0.2.1+1
-  webview_flutter: ^2.0.10
-  flutter_local_notifications: ^8.2.0
-  location: ^4.3.0
+  flutter_settings_screens: 0.3.2-null-safety
+  webview_flutter: ^3.0.0
+  flutter_local_notifications: ^9.1.5
+  geolocator: ^8.0.0
   workmanager: ^0.4.1
   get_it: ^7.2.0
-  move_to_background: ^1.0.2
 
 dev_dependencies:
   flutter_test:

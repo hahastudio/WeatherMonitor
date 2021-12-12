@@ -5,7 +5,6 @@ import 'package:bloc/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_monitor/bloc/blocs.dart';
 import 'package:weather_monitor/model/models.dart';
-import 'package:weather_monitor/notification_service.dart';
 import 'package:weather_monitor/repository/repositories.dart';
 
 
@@ -15,22 +14,14 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
 
   WeatherBloc({@required this.weatherRepository})
       : assert(weatherRepository != null),
-        super(WeatherInitial());
-
-  @override
-  Stream<WeatherState> mapEventToState(WeatherEvent event) async* {
-    if (event is WeatherInitiated) {
-      yield* _mapWeatherInitiatedToState(event);
-    } else if (event is WeatherRequested) {
-      yield* _mapWeatherRequestedToState(event);
-    } else if (event is WeatherRefreshRequested) {
-      yield* _mapWeatherRefreshRequestedToState(event);
-    } else if (event is WeatherBackgroundRefreshRequested) {
-      yield* _mapWeatherBackgroundRefreshRequestedToState(event);
-    }
+        super(WeatherInitial()) {
+    on<WeatherInitiated>(_onWeatherInitiated);
+    on<WeatherRequested>(_onWeatherRequested);
+    on<WeatherRefreshRequested>(_onWeatherRefreshRequested);
+    on<WeatherBackgroundRefreshRequested>(_onWeatherBackgroundRefreshRequested);
   }
 
-  Stream<WeatherState> _mapWeatherInitiatedToState(WeatherInitiated event) async* {
+  Future _onWeatherInitiated(WeatherInitiated event, Emitter<WeatherState> emit) async {
     final SharedPreferences prefs = await _prefs;
     String weatherJson = prefs.getString('weather') ?? '';
 
@@ -38,35 +29,35 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       try {
         Map weatherMap = json.decode(weatherJson);
         OverAllWeather weather = OverAllWeather.fromJson(weatherMap);
-        yield WeatherLoadSuccess(weather: weather);
+        emit(WeatherLoadSuccess(weather: weather));
       } catch (e) {
         print(e);
-        yield* _mapWeatherRequestedToState(WeatherRequested(city: event.city));
+        await _onWeatherRequested(WeatherRequested(city: event.city), emit);
       }
     } else {
-      yield* _mapWeatherRequestedToState(WeatherRequested(city: event.city));
+      await _onWeatherRequested(WeatherRequested(city: event.city), emit);
     }
   }
 
-  Stream<WeatherState> _mapWeatherRequestedToState(WeatherRequested event) async* {
-    yield WeatherLoadInProgress();
-    yield* _mapWeatherRefreshRequestedToState(WeatherRefreshRequested(city: event.city));
+  Future _onWeatherRequested(WeatherRequested event, Emitter<WeatherState> emit) async {
+    emit(WeatherLoadInProgress());
+    await _onWeatherRefreshRequested(WeatherRefreshRequested(city: event.city), emit);
   }
 
-  Stream<WeatherState> _mapWeatherRefreshRequestedToState(WeatherRefreshRequested event) async* {
+  Future _onWeatherRefreshRequested(WeatherRefreshRequested event, Emitter<WeatherState> emit) async {
     try {
       final OverAllWeather weather = await weatherRepository.getOverAllWeather(event.city);
-      yield WeatherLoadSuccess(weather: weather);
+      emit(WeatherLoadSuccess(weather: weather));
     } catch (e) {
       print(e);
-      yield WeatherLoadFailure(errorMessage: e.toString(), city: event.city);
+      emit(WeatherLoadFailure(errorMessage: e.toString(), city: event.city));
       // TODO: Show error message but not flush current result
     }
   }
 
-  Stream<WeatherState> _mapWeatherBackgroundRefreshRequestedToState(WeatherBackgroundRefreshRequested event) async* {
-    yield WeatherLoadInProgress();
+  Future _onWeatherBackgroundRefreshRequested(WeatherBackgroundRefreshRequested event, Emitter<WeatherState> emit) async {
+    emit(WeatherLoadInProgress());
     await Future.delayed(Duration(seconds: 1));
-    yield* _mapWeatherInitiatedToState(WeatherInitiated(city: event.city));
+    await _onWeatherInitiated(WeatherInitiated(city: event.city), emit);
   }
 }

@@ -1,5 +1,6 @@
-import 'package:flutter/services.dart';
-import 'package:location/location.dart';
+import 'dart:async';
+
+import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'model/city.dart' as cityModel;
 
@@ -10,80 +11,179 @@ class LocationService {
     return _instance;
   }
 
-  Location _location;
+  GeolocatorPlatform _geolocatorPlatform;
+  StreamSubscription<ServiceStatus> _serviceStatusStreamSubscription;
+  StreamSubscription<Position> _positionStreamSubscription;
 
   LocationService._internal() {
-    this._location = Location();
+    this._geolocatorPlatform = GeolocatorPlatform.instance;
   }
 
-  Future<bool> initLocation(Location loc, {int limit = 10}) async {
-    for (int i = 0; i < limit; i++) {
-      try {
-        return await loc.serviceEnabled();
-      } on PlatformException {
-        await Future.delayed(Duration(milliseconds: 300));
-      }
+  Future<bool> _handlePermission() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await _geolocatorPlatform.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      print('[LocationService] location services are disabled');
+      Geolocator.openLocationSettings();
+      return false;
     }
-    throw Exception('Failed to initialize location service.');
+
+    permission = await _geolocatorPlatform.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await _geolocatorPlatform.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        print('[LocationService] location permission denied');
+        return false;
+      }
+    } else if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      print('[LocationService] location permission denied forever');
+      return false;
+    }
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    print('[LocationService] location permission granted');
+    return true;
   }
 
   Future<cityModel.Location> getLocation() async {
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
+    print('[LocationService] start to get location');
+    final hasPermission = await _handlePermission();
 
-    _serviceEnabled = await initLocation(this._location);
-    if (!_serviceEnabled) {
-      _serviceEnabled = await this._location.requestService();
-      if (!_serviceEnabled) {
-        return null;
-      }
+    if (!hasPermission) {
+      return null;
     }
 
-    _permissionGranted = await this._location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await this._location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return null;
+    var locationSettings = LocationSettings(timeLimit: Duration(seconds: 30));
+    Position position = null;
+    try {
+      position = await _geolocatorPlatform.getCurrentPosition(locationSettings: locationSettings);
+    } on TimeoutException catch (e) {
+      try {
+        position = await _geolocatorPlatform.getLastKnownPosition();
+      } catch (e) {
+        print('[LocationService] $e');
       }
+    } catch (e) {
+      print('[LocationService] $e');
+    }
+    if (position == null) {
+      print('[LocationService] could not get current location');
+      return null;
     }
 
-    LocationData currentPosition = await this._location.getLocation();
+    print('[LocationService] got current location');
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('city.coordinate.latitude', currentPosition.latitude);
-    await prefs.setDouble('city.coordinate.longitude', currentPosition.longitude);
-    return cityModel.Location(latitude: currentPosition.latitude, longitude: currentPosition.longitude);
+    await prefs.setDouble('city.coordinate.latitude', position.latitude);
+    await prefs.setDouble('city.coordinate.longitude', position.longitude);
+    print('[LocationService] saved to shared preferences');
+    return cityModel.Location(latitude: position.latitude, longitude: position.longitude);
+  }
+
+  void _startServiceStatusStream() {
+    if (_serviceStatusStreamSubscription != null) {
+      return;
+    }
+    final serviceStatusStream = _geolocatorPlatform.getServiceStatusStream();
+    _serviceStatusStreamSubscription = serviceStatusStream.handleError(
+      (error) {
+        _serviceStatusStreamSubscription?.cancel();
+        _serviceStatusStreamSubscription = null;
+      }
+    ).listen(
+      (serviceStatus) {
+        String serviceStatusValue;
+        if (serviceStatus == ServiceStatus.enabled) {
+          _startPositionListening();
+          serviceStatusValue = 'enabled';
+        } else {
+          if (_positionStreamSubscription != null) {
+            _positionStreamSubscription?.cancel();
+            _positionStreamSubscription = null;
+            print('[LocationService] Position Stream has been canceled');
+          }
+          serviceStatusValue = 'disabled';
+        }
+        print('[LocationService] Location service has been $serviceStatusValue');
+      }
+    );
+  }
+
+  void _startPositionListening() {
+    if (_positionStreamSubscription != null) {
+      if (_positionStreamSubscription.isPaused) {
+        _positionStreamSubscription.resume();
+        print('[LocationService] Listening for position updates started');
+      }
+      return;
+    }
+    final positionStream = _geolocatorPlatform.getPositionStream();
+    _positionStreamSubscription = positionStream.handleError(
+      (error) {
+        _positionStreamSubscription?.cancel();
+        _positionStreamSubscription = null;
+      }
+    ).listen(
+      (position) async {
+        try {
+          print('[LocationService] location changed');
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setDouble('city.coordinate.latitude', position.latitude);
+          await prefs.setDouble('city.coordinate.longitude', position.longitude);
+        } catch (e) {
+          print('[LocationService] $e');
+        }
+      }
+    );
+    if (_positionStreamSubscription.isPaused) {
+      _positionStreamSubscription.resume();
+    }
+    print('[LocationService] Listening for position updates started');
   }
 
   Future backgroundInit() async {
-    var enabled = await this._location.enableBackgroundMode(enable: true);
-    if (!enabled) {
-      print('Location service failed to run in background mode.');
+    try {
+      _startServiceStatusStream();
+      print('[LocationService] background initialized');
+    } catch (e) {
+      print(e);
     }
   }
 
   Future init() async {
-    var enabled = false;
     try {
-      enabled = await this._location.enableBackgroundMode(enable: true);
+      _startServiceStatusStream();
+      print('[LocationService] foreground initialized');
     } catch (e) {
       print(e);
     }
-    if (!enabled) {
-      print('Location service failed to run in background mode.');
-    } else {
-      /*
-      this._location.changeSettings(interval: 5 * 60 * 1000);
-      this._location.onLocationChanged.listen((LocationData currentLocation) async {
-        try {
-          print('Location changed');
-          final SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setDouble('city.coordinate.latitude', currentLocation.latitude);
-          await prefs.setDouble('city.coordinate.longitude', currentLocation.longitude);
-        } catch (e) {
-          print(e);
-        }
-      });
-      */
+  }
+
+  Future dispose() async {
+    try {
+      if (_positionStreamSubscription != null) {
+        _positionStreamSubscription.cancel();
+        _positionStreamSubscription = null;
+      }
+      if (_serviceStatusStreamSubscription != null) {
+        _serviceStatusStreamSubscription.cancel();
+        _serviceStatusStreamSubscription = null;
+      }
+      print('[LocationService] disposed');
+    } catch (e) {
+      print(e);
     }
   }
 

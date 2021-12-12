@@ -11,7 +11,10 @@ class WeatherRepository {
   WeatherRepository(this.weatherApi, this.weatherSubApi);
 
   Future<OverAllWeather> getOverAllWeather(String city) async {
+    print('[WeatherRepository] start to get OverAllWeather');
+    print('[WeatherRepository] start to getLocation');
     var location = await weatherApi.getLocation(city);
+    print('[WeatherRepository] start to getOverAllWeather');
     var weather = await weatherApi.getOverAllWeather(location);
 
     if ((city != null) && (city.startsWith('::geolocation_'))) {
@@ -21,6 +24,7 @@ class WeatherRepository {
     }
 
     try {
+      print('[WeatherRepository] start to getOverAllWeather from sub api');
       var weatherSub = await weatherSubApi.getOverAllWeather(location);
       weather.description = weatherSub.description;
       weather.alerts = weatherSub.alerts;
@@ -31,7 +35,7 @@ class WeatherRepository {
     if (weather != null) {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('weather', jsonEncode(weather.toJson()));
-      print('weather refreshed on ${weather.current.dt} stored.');
+      print('[WeatherRepository] weather refreshed on ${weather.current.dt} stored.');
 
       if ((weather.alerts != null) && (weather.alerts.length > 0)) {
         List<String> alertJsons = prefs.getStringList('weatherAlerts');

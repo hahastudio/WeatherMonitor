@@ -7,7 +7,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
-import 'package:move_to_background/move_to_background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_monitor/model/theme.dart';
 
@@ -41,7 +40,6 @@ Future main() async {
   );
   var weatherBloc = WeatherBloc(weatherRepository: weatherRepository);
   GetIt.instance.registerSingleton<WeatherBloc>(weatherBloc);
-  Bloc.observer = SimpleBlocObserver();
 
   await NotificationService().init();
   if ((city != null) && (city.startsWith('::geolocation_'))) {
@@ -55,36 +53,45 @@ Future main() async {
   var registerResult = IsolateNameServer.registerPortWithName(port.sendPort, 'backgroundCallbackChannel');
   if (!registerResult)
     print('[Main] failed to register port');
-  port.listen((dynamic data) async {
-    print('[Main][backgroundCallbackChannel listener] got $data');
-    var task = data.toString();
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.reload();
-    String city = prefs.getString('city') ?? '';
-    switch (task) {
-      case 'WeatherRequested':
-        if (city != '')
-          weatherBloc.add(WeatherRequested(city: city));
-        break;
-      case 'WeatherRefreshRequested':
-        if (city != '')
-          weatherBloc.add(WeatherRefreshRequested(city: city));
-        break;
-      case 'WeatherBackgroundRefreshRequested':
-        if (city != '')
-          weatherBloc.add(WeatherBackgroundRefreshRequested(city: city));
-    }
-    print('[Main][backgroundCallbackChannel listener] finished processing $data');
-  });
-  BackgroundService().registerWeatherRefreshPeriodicTask();
-  print('[Main] main initialization finished');
+  else {
+    port.listen((dynamic data) async {
+      print('[Main][backgroundCallbackChannel listener] got $data');
+      var task = data.toString();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.reload();
+      String city = prefs.getString('city') ?? '';
+      switch (task) {
+        case 'WeatherRequested':
+          if (city != '')
+            weatherBloc.add(WeatherRequested(city: city));
+          break;
+        case 'WeatherRefreshRequested':
+          if (city != '')
+            weatherBloc.add(WeatherRefreshRequested(city: city));
+          break;
+        case 'WeatherBackgroundRefreshRequested':
+          if (city != '')
+            weatherBloc.add(WeatherBackgroundRefreshRequested(city: city));
+      }
+      print('[Main][backgroundCallbackChannel listener] finished processing $data');
+    });
+    BackgroundService().registerWeatherRefreshPeriodicTask();
+  }
 
-  runApp(WeatherApp());
+  print('[Main] main initialization finished');
+  BlocOverrides.runZoned(
+    () {
+      runApp(WeatherApp());
+    },
+    blocObserver: SimpleBlocObserver(),
+  );
 }
 
-class WeatherApp extends StatelessWidget {
-  WeatherApp()
-      : super();
+class WeatherApp extends StatefulWidget {
+  State<WeatherApp> createState() => _WeatherAppState();
+}
+
+class _WeatherAppState extends State<WeatherApp> {
 
   // This widget is the root of your application.
   @override
@@ -109,7 +116,6 @@ class WeatherApp extends StatelessWidget {
               home: WeatherWidget(),
             ),
             onWillPop: () async {
-              MoveToBackground.moveTaskToBack();
               print('[Main] move task to back');
               return false;
             },
@@ -117,5 +123,11 @@ class WeatherApp extends StatelessWidget {
         }
       )
     );
+  }
+
+  @override
+  void dispose() {
+    LocationService().dispose();
+    super.dispose();
   }
 }

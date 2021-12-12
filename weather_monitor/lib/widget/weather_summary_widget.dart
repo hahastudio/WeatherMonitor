@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:strings/strings.dart';
 import 'package:weather_monitor/model/models.dart';
+import 'package:weather_monitor/util/strings.dart';
 import 'package:weather_monitor/widget/conditional_widget.dart';
 
 class WeatherSummaryWidget extends StatelessWidget {

@@ -16,8 +16,8 @@ class WindMapState extends State<WindMapWidget> {
   @override
   void initState() {
     super.initState();
-    // Enable hybrid composition.
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    // Enable virtual display.
+    //if (Platform.isAndroid) WebView.platform = AndroidWebView();
   }
 
   @override
@@ -27,13 +27,14 @@ class WindMapState extends State<WindMapWidget> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(
-            "Wind Map",
+          "Wind Map",
         ),
         Container(
           padding: EdgeInsets.all(15),
           height: 300,
           child: WebView(
             javascriptMode: JavascriptMode.unrestricted,
+            zoomEnabled: true,
             initialUrl: 'https://earth.nullschool.net/#current/wind/surface/level/orthographic=${widget.location.longitude.toStringAsFixed(3)},${widget.location.latitude.toStringAsFixed(3)},1000',
           ),
         ),

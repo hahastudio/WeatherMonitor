@@ -48,6 +48,7 @@ void callbackDispatcher() {
           print("[Background] $weatherRefreshPeriodicTask finished.");
           break;
       }
+      LocationService().dispose();
       return Future.value(true);
     } catch (e) {
       print("[Background] $e");

@@ -31,17 +31,23 @@ class NotificationService {
         );
         AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-            'WeatherAlertNotificationChannel', 'Weather Alert',
-            'Get notifications about severe weather.',
+            'WeatherAlertNotificationChannel',
+            'Weather Alert',
+            channelDescription: 'Get notifications about severe weather.',
             importance: Importance.high,
             priority: Priority.high,
             styleInformation: bigTextStyleInformation,
-            showWhen: false);
+            showWhen: false
+        );
         NotificationDetails platformChannelSpecifics =
         NotificationDetails(android: androidPlatformChannelSpecifics);
         await _flutterLocalNotificationsPlugin.show(
-            i, alert.event, alert.description, platformChannelSpecifics,
-            payload: city);
+            i,
+            alert.event,
+            alert.description,
+            platformChannelSpecifics,
+            payload: city
+        );
         print('Weather alert notification sent');
       });
     } catch (e) {
@@ -51,7 +57,7 @@ class NotificationService {
   }
 
   Future init() async {
-    String selectedNotificationPayload;
+    String selectedNotificationPayload = '';
     NotificationAppLaunchDetails notificationAppLaunchDetails =
     await _flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
 
@@ -67,11 +73,12 @@ class NotificationService {
     );
 
     await _flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: (String payload) async {
-          if (payload != null) {
-            print('notification payload: $payload');
-          }
-          selectedNotificationPayload = payload;
-        });
+      onSelectNotification: (String payload) async {
+        if (payload != null) {
+          print('notification payload: $payload');
+        }
+        selectedNotificationPayload = payload;
+      }
+    );
   }
 }
