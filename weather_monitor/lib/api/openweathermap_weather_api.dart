@@ -13,6 +13,8 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
     "user-agent": null
   };
 
+  static const unknownCityName = 'Unknown location';
+
   final String apiKey;
   final http.Client httpClient;
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
@@ -67,18 +69,26 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
     var queryParameters = {
       'lat': location.latitude.toString(),
       'lon': location.longitude.toString(),
-      'appid': apiKey
+      'appid': apiKey,
+      'limit': '1'
     };
-    final uri = Uri.https(endPointHost, endPointPrefix + '/weather', queryParameters);
+    final uri = Uri.https(endPointHost, '/geo/1.0/reverse', queryParameters);
     print('[OpenWeatherMapApi] getCityName requested');
     var response = await this.httpClient.get(uri, headers: defaultHeader);
     print('[OpenWeatherMapApi] getCityName responded');
     if (response.statusCode != 200) {
       throw Exception('error retrieving city name: status ${response.statusCode}');
     }
+    try {
+      List responseList = jsonDecode(response.body);
+      if (responseList.length <= 0)
+        return unknownCityName;
+      return responseList[0]['name'];
+    } catch (e) {
+      print('[OpenWeatherMapApi] $e');
+      return unknownCityName;
+    }
 
-    Map responseJson = jsonDecode(response.body);
-    return responseJson['name'];
   }
 
   @override

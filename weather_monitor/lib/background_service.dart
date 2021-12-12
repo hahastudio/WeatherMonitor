@@ -29,7 +29,6 @@ void callbackDispatcher() {
           )
       );
       await NotificationService().init();
-      await LocationService().backgroundInit();
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.reload();
 
@@ -48,10 +47,9 @@ void callbackDispatcher() {
           print("[Background] $weatherRefreshPeriodicTask finished.");
           break;
       }
-      LocationService().dispose();
       return Future.value(true);
-    } catch (e) {
-      print("[Background] $e");
+    } catch (e, stack) {
+      print("[Background] $e\n$stack");
       return Future.value(false);
     }
   });
