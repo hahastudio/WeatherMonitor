@@ -9,6 +9,7 @@ import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_monitor/model/theme.dart';
+import 'package:weather_monitor/util/extend_http_client.dart';
 
 import 'api/apis.dart';
 import 'background_service.dart';
@@ -31,11 +32,11 @@ Future main() async {
   final WeatherRepository weatherRepository = WeatherRepository(
     OpenWeatherMapWeatherApi(
       apiKey: dotenv.env['OPENWEATHERMAP_API_KEY'],
-      httpClient: http.Client()
+      httpClient: HttpRetryClient(http.Client())
     ),
     ColorfulCloudWeatherApi(
       apiKey: dotenv.env['COLORFULCLOUD_API_KEY'],
-      httpClient: http.Client()
+      httpClient: HttpRetryClient(http.Client())
     )
   );
   var weatherBloc = WeatherBloc(weatherRepository: weatherRepository);

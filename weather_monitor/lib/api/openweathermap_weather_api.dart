@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_monitor/api/apis.dart';
 import 'package:weather_monitor/location_service.dart';
 import 'package:weather_monitor/model/models.dart';
+import 'package:weather_monitor/util/extend_http_client.dart';
 
 class OpenWeatherMapWeatherApi extends WeatherApi {
 
@@ -16,7 +16,7 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
   static const unknownCityName = 'Unknown location';
 
   final String apiKey;
-  final http.Client httpClient;
+  final HttpRetryClient httpClient;
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   OpenWeatherMapWeatherApi({

@@ -1,7 +1,7 @@
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:weather_monitor/api/apis.dart';
 import 'package:weather_monitor/model/models.dart';
+import 'package:weather_monitor/util/extend_http_client.dart';
 
 class ColorfulCloudWeatherApi extends WeatherSubApi {
 
@@ -12,7 +12,7 @@ class ColorfulCloudWeatherApi extends WeatherSubApi {
   };
 
   final String apiKey;
-  final http.Client httpClient;
+  final HttpRetryClient httpClient;
 
   ColorfulCloudWeatherApi({
     this.apiKey,

@@ -3,10 +3,10 @@ import 'package:flutter/foundation.dart' as Foundation;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weather_monitor/util/extend_http_client.dart';
 import 'package:workmanager/workmanager.dart';
 
 import 'api/apis.dart';
-import 'location_service.dart';
 import 'notification_service.dart';
 import 'repository/repositories.dart';
 
@@ -21,11 +21,11 @@ void callbackDispatcher() {
       final WeatherRepository weatherRepository = WeatherRepository(
           OpenWeatherMapWeatherApi(
               apiKey: dotenv.env['OPENWEATHERMAP_API_KEY'],
-              httpClient: http.Client()
+              httpClient: HttpRetryClient(http.Client())
           ),
           ColorfulCloudWeatherApi(
               apiKey: dotenv.env['COLORFULCLOUD_API_KEY'],
-              httpClient: http.Client()
+              httpClient: HttpRetryClient(http.Client())
           )
       );
       await NotificationService().init();
