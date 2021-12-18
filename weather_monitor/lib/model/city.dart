@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/services.dart';
 import 'package:weather_monitor/util/typeconverter.dart';
 
 class City {
@@ -91,18 +90,19 @@ class Location {
 }
 
 class CityViewModel {
-  static List<City> cities;
+  static List<City> cities = <City>[];
 
-  static Future loadCities() async {
+  static List<City> loadCities(String jsonString) {
     try {
-      cities = <City>[];
-      String jsonString = await rootBundle.loadString('assets/current.city.list.min.json');
+      var cities = <City>[];
       List parsedJson = json.decode(jsonString) as List;
       for (int i = 0; i < parsedJson.length; i++) {
         cities.add(City.fromJson(parsedJson[i]));
       }
+      return cities;
     } catch (e) {
       print(e);
+      return <City>[];
     }
   }
 }

@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_monitor/model/models.dart';
 
@@ -12,10 +14,6 @@ class _CitySelectionWidgetState extends State<CitySelectionWidget> {
   final TextEditingController _textController = TextEditingController();
   City city;
 
-  void _loadCities() async {
-    await CityViewModel.loadCities();
-  }
-
   Future saveCity(City _city) async {
     final SharedPreferences prefs = await _prefs;
     await prefs.setString('city', _city.name);
@@ -26,7 +24,6 @@ class _CitySelectionWidgetState extends State<CitySelectionWidget> {
 
   @override
   void initState() {
-    _loadCities();
     super.initState();
   }
 
@@ -36,9 +33,14 @@ class _CitySelectionWidgetState extends State<CitySelectionWidget> {
   Widget build(BuildContext context) {
     var autoCompleteInput = Autocomplete<City>(
       displayStringForOption: _displayStringForOption,
-      optionsBuilder: (TextEditingValue textEditingValue) {
+      optionsBuilder: (TextEditingValue textEditingValue) async {
         if (textEditingValue.text == '') {
           return const Iterable<City>.empty();
+        }
+        if ((CityViewModel.cities == null) || (CityViewModel.cities.length == 0)) {
+          String jsonString = await rootBundle.loadString('assets/current.city.list.min.json');
+          var cities = await compute(CityViewModel.loadCities, jsonString);
+          CityViewModel.cities = cities;
         }
         return CityViewModel.cities.where((City option) {
           return option.name.toLowerCase()
