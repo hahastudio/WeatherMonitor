@@ -10,8 +10,6 @@ class SettingsListWidget extends StatefulWidget {
 }
 
 class _SettingsListWidgetState extends State<SettingsListWidget> {
-  bool lockInBackground = true;
-  bool notificationsEnabled = true;
 
   @override
   Widget build(BuildContext context) {
@@ -20,24 +18,27 @@ class _SettingsListWidgetState extends State<SettingsListWidget> {
       child: SettingsScreen(
           title: 'Settings',
           children: [
-            SwitchSettingsTile(
-              settingKey: 'settings.isDarkMode',
-              title: 'Dark Mode',
-              enabledLabel: 'Enabled',
-              disabledLabel: 'Disabled',
-              leading: Icon(Icons.palette),
-              onChange: (value) async {
-                BlocProvider.of<ThemeBloc>(context).add(
-                  ThemeEvent(appTheme: value ? AppTheme.darkTheme : AppTheme.lightTheme),
-                );
-              },
+            DropDownSettingsTile<int>(
+                title: 'Dark Mode',
+                settingKey: 'settings.themeMode',
+                selected: 0,
+                values: <int, String>{
+                  0: 'System',
+                  1: 'Light',
+                  2: 'Dark',
+                },
+                onChange: (value) {
+                  if (value < 0)
+                    value = 0;
+                  if (value > 2)
+                    value = 2;
+                  BlocProvider.of<ThemeBloc>(context).add(
+                    ThemeEvent(appTheme: AppTheme.values[value]),
+                  );
+                },
             )
           ]
       )
     );
-  }
-
-  Future saveTheme(bool isDarkMode) async {
-    await Settings.setValue<bool>('settings.isDarkMode', isDarkMode);
   }
 }

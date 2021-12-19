@@ -7,7 +7,7 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
 
   ThemeBloc(): super(
     ThemeState(
-      appTheme: AppTheme.lightTheme,
+      appTheme: AppTheme.systemTheme,
     ),
   ) {
     on<ThemeEvent>((event, emit) => emit(ThemeState(

@@ -25,7 +25,7 @@ Future main() async {
   await dotenv.load(fileName: ".env");
   final prefs = await SharedPreferences.getInstance();
   String city = prefs.getString('city') ?? '';
-  await Settings.init();
+  await Settings.init(cacheProvider: SharePreferenceCache());
   // needed if you intend to initialize in the `main` function
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -113,7 +113,9 @@ class _WeatherAppState extends State<WeatherApp> {
           return WillPopScope(
             child: MaterialApp(
               title: 'Weather Monitor',
-              theme: AppThemes.appThemeData[themeState.appTheme],
+              theme: AppThemes.appThemeData[AppTheme.lightTheme],
+              darkTheme: AppThemes.appThemeData[AppTheme.darkTheme],
+              themeMode: AppThemes.convert(themeState.appTheme),
               home: WeatherWidget(),
             ),
             onWillPop: () async {
