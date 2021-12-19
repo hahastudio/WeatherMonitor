@@ -32,7 +32,7 @@ Mainly used Flutter packages:
 - [flutter_settings_screens](https://pub.dev/packages/flutter_settings_screens) for setting page
 - [webview_flutter](https://pub.dev/packages/webview_flutter) to embed wind map
 - [flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications) to send weather alert notification
-- [location](https://pub.dev/packages/location) to get current location
+- [geolocator](https://pub.dev/packages/geolocator) to get current location
 - [workmanager](https://pub.dev/packages/workmanager) for background fetch
 
 Weather Glyph Font:
