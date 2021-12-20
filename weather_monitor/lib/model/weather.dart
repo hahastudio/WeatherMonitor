@@ -125,6 +125,8 @@ class Weather {
   Snow snowVolumes;
   /// Weather condition
   WeatherCondition weather;
+  /// Air Quality
+  AirQuality airQuality;
 
   Weather({
     this.dt,
@@ -146,7 +148,8 @@ class Weather {
     this.rainVolumes,
     this.snow,
     this.snowVolumes,
-    this.weather
+    this.weather,
+    this.airQuality
   });
 
   /// Convert Json to Weather object
@@ -192,6 +195,9 @@ class Weather {
       } else {
         result.snow = intToDouble(json['snow']);
       }
+    }
+    if (json['airQuality'] != null) {
+      result.airQuality = AirQuality.fromJson(json['airQuality']);
     }
     return result;
   }
@@ -244,6 +250,9 @@ class Weather {
       result['snow'] = snow;
     } else if (snowVolumes != null) {
       result['snow'] = snowVolumes.toJson();
+    }
+    if (airQuality != null) {
+      result['airQuality'] = airQuality.toJson();
     }
     return result;
   }
@@ -836,5 +845,45 @@ class ForecastMainWeather {
     if (groundLevel != null)
       result['grnd_level'] = groundLevel;
     return result;
+  }
+}
+
+class AirQuality {
+  /// AQI. Use U.S. Air Quality Index when possible
+  double aqi;
+
+  AirQuality({
+    this.aqi
+  });
+
+  /// Convert Json to ForecastMainWeather
+  static AirQuality fromJson(Map<String, dynamic> json) {
+    return AirQuality(
+      aqi: intToDouble(json['aqi']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    var result = {
+      'aqi': aqi,
+    };
+    return result;
+  }
+
+  String toDescription() {
+    if (aqi == null) {
+      return 'N/A';
+    } else if (aqi <= 50) {
+      return 'Good';
+    } else if (aqi <= 100) {
+      return 'Moderate';
+    } else if (aqi <= 150) {
+      return 'Unhealthy for Sensitive Groups';
+    } else if (aqi <= 200) {
+      return 'Unhealthy';
+    } else if (aqi <= 300) {
+      return 'Very Unhealthy';
+    }
+    return 'Hazardous';
   }
 }

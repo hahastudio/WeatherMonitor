@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:weather_monitor/api/apis.dart';
 import 'package:weather_monitor/model/models.dart';
 import 'package:weather_monitor/util/extend_http_client.dart';
+import 'package:weather_monitor/util/typeconverter.dart';
 
 class ColorfulCloudWeatherApi extends WeatherSubApi {
 
@@ -49,6 +50,22 @@ class ColorfulCloudWeatherApi extends WeatherSubApi {
           weather.alerts = alerts;
         }
       }
+      if (responseJson['result']['realtime'] != null) {
+        weather.current = Weather();
+        if (responseJson['result']['realtime']['air_quality'] != null) {
+          if (responseJson['result']['realtime']['air_quality']['aqi'] != null) {
+            weather.current.airQuality = AirQuality();
+            if (responseJson['result']['realtime']['air_quality']['aqi']['usa'] != null) {
+              weather.current.airQuality.aqi = intToDouble(responseJson['result']['realtime']['air_quality']['aqi']['usa']);
+            } else if (responseJson['result']['realtime']['air_quality']['aqi']['chn'] != null) {
+              weather.current.airQuality.aqi = intToDouble(responseJson['result']['realtime']['air_quality']['aqi']['chn']);
+            } else {
+              weather.current.airQuality = null;
+            }
+          }
+        }
+      }
+
     }
     return weather;
   }

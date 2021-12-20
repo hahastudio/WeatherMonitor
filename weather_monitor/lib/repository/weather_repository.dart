@@ -27,7 +27,14 @@ class WeatherRepository {
       print('[WeatherRepository] start to getOverAllWeather from sub api');
       var weatherSub = await weatherSubApi.getOverAllWeather(location);
       weather.description = weatherSub.description;
-      weather.alerts = weatherSub.alerts;
+      if (weatherSub.alerts != null) {
+        weather.alerts = weatherSub.alerts;
+      }
+      if (weatherSub.current != null) {
+        if (weatherSub.current.airQuality != null) {
+          weather.current.airQuality = weatherSub.current.airQuality;
+        }
+      }
     } catch (e) {
       print(e);
     }

@@ -230,6 +230,29 @@ class WeatherDetailsWidget extends StatelessWidget {
                   ],
                 ),
               ),
+              ConditionalWidget(
+                condition: this.weather.airQuality != null,
+                widgetBuilder: (context) =>  SizedBox(height: 10),
+              ),
+              ConditionalWidget(
+                condition: this.weather.airQuality != null,
+                widgetBuilder: (context) =>  Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(bottom: 5),
+                      child: Icon(WeatherIcons.dust, size: 15),
+                    ),
+                    SizedBox(width: 10),
+                    Text('AQI: ${this.weather.airQuality.aqi}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).textTheme.bodyText1.color,
+                        )
+                    ),
+                  ],
+                ),
+              )
             ]
         ),
       ),

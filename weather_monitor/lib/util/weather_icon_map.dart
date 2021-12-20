@@ -36,6 +36,7 @@ class WeatherIcons {
   static const IconData cloudiness = const _IconData(0xf041);
   static const IconData pressure = const _IconData(0xf079);
   static const IconData humidity = const _IconData(0xf07a);
+  static const IconData dust = const _IconData(0xf063);
 
   static const IconData sunrise = const _IconData(0xf051);
   static const IconData sunset = const _IconData(0xf052);
