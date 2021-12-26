@@ -5,6 +5,7 @@ import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_monitor/bloc/blocs.dart';
 import 'package:weather_monitor/model/models.dart';
+import 'package:weather_monitor/util/constants.dart';
 import 'package:weather_monitor/widget/widgets.dart';
 
 import '../location_service.dart';
@@ -29,7 +30,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
     final SharedPreferences prefs = await _prefs;
 
     // city
-    String city = prefs.getString('city') ?? '';
+    String city = prefs.getString(Constants.CitySettingKey) ?? '';
 
     if (city != '')
       BlocProvider.of<WeatherBloc>(context)
@@ -66,7 +67,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
           },
           builder: (context, state) {
             if (state is WeatherInitial) {
-              return Center(child: Text('Please Select a Location'));
+              return WeatherInitWidget();
             }
             if (state is WeatherLoadInProgress) {
               return Center(child: CircularProgressIndicator());
@@ -203,11 +204,13 @@ class _WeatherWidgetState extends State<WeatherWidget> {
             ),
           );
           if (city != null) {
-            if (city.startsWith('::geolocation_')) {
+            if (city.startsWith(Constants.GpsPrefix)) {
               await LocationService().init();
             }
-            BlocProvider.of<WeatherBloc>(context)
-                .add(WeatherRequested(city: city));
+            if (await WeatherBloc.IsInitialized()) {
+              BlocProvider.of<WeatherBloc>(context)
+                  .add(WeatherRequested(city: city));
+            }
           }
         },
       ),

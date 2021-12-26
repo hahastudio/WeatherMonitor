@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_monitor/bloc/blocs.dart';
 import 'package:weather_monitor/model/models.dart';
 import 'package:weather_monitor/repository/repositories.dart';
+import 'package:weather_monitor/util/constants.dart';
 
 
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
@@ -23,7 +24,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
 
   Future _onWeatherInitiated(WeatherInitiated event, Emitter<WeatherState> emit) async {
     final SharedPreferences prefs = await _prefs;
-    String weatherJson = prefs.getString('weather') ?? '';
+    String weatherJson = prefs.getString(Constants.WeatherSettingKey) ?? '';
 
     if (weatherJson != '' && weatherJson != '{}') {
       try {
@@ -59,5 +60,12 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     emit(WeatherLoadInProgress());
     await Future.delayed(Duration(seconds: 1));
     await _onWeatherInitiated(WeatherInitiated(city: event.city), emit);
+  }
+
+  static Future<bool> IsInitialized() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String city = prefs.getString(Constants.CitySettingKey) ?? '';
+    String openWeatherApiKey = prefs.getString(Constants.OpenWeatherApiSettingKey) ?? '';
+    return (city != '') && (openWeatherApiKey != '');
   }
 }

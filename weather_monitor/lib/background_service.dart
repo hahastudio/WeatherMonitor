@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/foundation.dart' as Foundation;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weather_monitor/util/constants.dart';
 import 'package:weather_monitor/util/extend_http_client.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -17,14 +17,11 @@ void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {
       print('[Background] background task started.');
-      await dotenv.load(fileName: ".env");
       final WeatherRepository weatherRepository = WeatherRepository(
           OpenWeatherMapWeatherApi(
-              apiKey: dotenv.env['OPENWEATHERMAP_API_KEY'],
               httpClient: HttpRetryClient(http.Client())
           ),
-          ColorfulCloudWeatherApi(
-              apiKey: dotenv.env['COLORFULCLOUD_API_KEY'],
+          ColorfulCloudsWeatherApi(
               httpClient: HttpRetryClient(http.Client())
           )
       );
@@ -35,7 +32,7 @@ void callbackDispatcher() {
       switch (task) {
         case weatherRefreshPeriodicTask:
           print("[Background] $weatherRefreshPeriodicTask triggered.");
-          String city = prefs.getString('city') ?? '';
+          String city = prefs.getString(Constants.CitySettingKey) ?? '';
           if (city != '')
             await weatherRepository.getOverAllWeather(city);
           var sendPort = IsolateNameServer.lookupPortByName('backgroundCallbackChannel');

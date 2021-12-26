@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_monitor/model/models.dart';
+import 'package:weather_monitor/util/constants.dart';
 
 class CitySelectionWidget extends StatefulWidget {
   @override
@@ -16,10 +17,10 @@ class _CitySelectionWidgetState extends State<CitySelectionWidget> {
 
   Future saveCity(City _city) async {
     final SharedPreferences prefs = await _prefs;
-    await prefs.setString('city', _city.name);
-    await prefs.setDouble('city.coordinate.longitude', _city.coordinate.longitude);
-    await prefs.setDouble('city.coordinate.latitude', _city.coordinate.latitude);
-    await prefs.setString('weather', '');
+    await prefs.setString(Constants.CitySettingKey, _city.name);
+    await prefs.setDouble(Constants.LongitudeSettingKey, _city.coordinate.longitude);
+    await prefs.setDouble(Constants.LatitudeSettingKey, _city.coordinate.latitude);
+    await prefs.setString(Constants.WeatherSettingKey, '');
   }
 
   @override
@@ -96,7 +97,7 @@ class _CitySelectionWidgetState extends State<CitySelectionWidget> {
                   child: TextButton.icon(
                     onPressed: () async {
                       var city = City(
-                          name: '::geolocation_',
+                          name: Constants.GpsPrefix,
                           coordinate: Location(
                               latitude: 0,
                               longitude: 0

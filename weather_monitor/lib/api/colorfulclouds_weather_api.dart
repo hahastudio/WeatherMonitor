@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_monitor/api/apis.dart';
 import 'package:weather_monitor/model/models.dart';
+import 'package:weather_monitor/util/constants.dart';
 import 'package:weather_monitor/util/extend_http_client.dart';
 import 'package:weather_monitor/util/typeconverter.dart';
 
-class ColorfulCloudWeatherApi extends WeatherSubApi {
+class ColorfulCloudsWeatherApi extends WeatherSubApi {
 
   static const endPointHost = 'api.caiyunapp.com';
   static const endPointPrefix = '/v2.5';
@@ -12,27 +14,32 @@ class ColorfulCloudWeatherApi extends WeatherSubApi {
     "user-agent": null
   };
 
-  final String apiKey;
   final HttpRetryClient httpClient;
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
-  ColorfulCloudWeatherApi({
-    this.apiKey,
+  ColorfulCloudsWeatherApi({
     this.httpClient,
   });
 
+  Future<String> _getApiKey () async {
+    final SharedPreferences prefs = await _prefs;
+    return prefs.getString(Constants.ColorfulCloudsApiSettingKey) ?? '';
+  }
+
   @override
   Future<OverAllWeather> getOverAllWeather(Location location) async {
-    if ((apiKey == null) || (apiKey == ''))
+    var apiKey = await _getApiKey();
+    if (apiKey == '')
       return OverAllWeather();
     var queryParameters = {
       'lang': 'zh_CN',
       'unit': 'metric:v2',
       'alert': 'true',
     };
-    final uri = Uri.https(endPointHost, endPointPrefix + '/${apiKey}/${location.longitude.toStringAsFixed(6)},${location.latitude.toStringAsFixed(6)}/weather.json', queryParameters);
-    print('[ColorfulCloudApi] getOverAllWeather requested');
+    final uri = Uri.https(endPointHost, endPointPrefix + '/' + apiKey + '/${location.longitude.toStringAsFixed(6)},${location.latitude.toStringAsFixed(6)}/weather.json', queryParameters);
+    print('[ColorfulCloudsApi] getOverAllWeather requested');
     var response = await this.httpClient.get(uri, headers: defaultHeader);
-    print('[ColorfulCloudApi] getOverAllWeather responded');
+    print('[ColorfulCloudsApi] getOverAllWeather responded');
     if (response.statusCode != 200) {
       return OverAllWeather();
     }

@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_monitor/api/apis.dart';
 import 'package:weather_monitor/location_service.dart';
 import 'package:weather_monitor/model/models.dart';
+import 'package:weather_monitor/util/constants.dart';
 import 'package:weather_monitor/util/extend_http_client.dart';
 
 class OpenWeatherMapWeatherApi extends WeatherApi {
@@ -15,19 +16,22 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
 
   static const unknownCityName = 'Unknown location';
 
-  final String apiKey;
   final HttpRetryClient httpClient;
   Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   OpenWeatherMapWeatherApi({
-    this.apiKey,
     this.httpClient,
   });
+
+  Future<String> _getApiKey () async {
+    final SharedPreferences prefs = await _prefs;
+    return prefs.getString(Constants.OpenWeatherApiSettingKey) ?? '';
+  }
 
   @override
   Future<Location> getLocation(String city) async {
     try {
-      if ((city != null) && (city.startsWith('::geolocation_'))) {
+      if ((city != null) && (city.startsWith(Constants.GpsPrefix))) {
         return await LocationService().getLocation();
       }
     } catch (e) {
@@ -36,14 +40,18 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
 
     final SharedPreferences prefs = await _prefs;
     //FIXME: location may not be saved
-    var latitude = prefs.getDouble('city.coordinate.latitude');
-    var longitude = prefs.getDouble('city.coordinate.longitude');
+    var latitude = prefs.getDouble(Constants.LatitudeSettingKey);
+    var longitude = prefs.getDouble(Constants.LongitudeSettingKey);
 
     return Location(latitude: latitude, longitude: longitude);
   }
 
   @override
   Future<OverAllWeather> getOverAllWeather(Location location) async {
+    var apiKey = await _getApiKey();
+    if (apiKey == '')
+      return null;
+
     var queryParameters = {
       'lat': location.latitude.toString(),
       'lon': location.longitude.toString(),
@@ -66,6 +74,10 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
   }
 
   Future<String> getCityName(Location location) async {
+    var apiKey = await _getApiKey();
+    if (apiKey == '')
+      return null;
+
     var queryParameters = {
       'lat': location.latitude.toString(),
       'lon': location.longitude.toString(),
@@ -93,6 +105,10 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
 
   @override
   Future<CurrentWeather> getCurrentWeather(String city) async {
+    var apiKey = await _getApiKey();
+    if (apiKey == '')
+      return null;
+
     var queryParameters = {
       'q': city,
       'appid': apiKey
@@ -110,6 +126,10 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
 
   @override
   Future<ForecastStat> getForecastWeather(String city) async {
+    var apiKey = await _getApiKey();
+    if (apiKey == '')
+      return null;
+
     var queryParameters = {
       'q': city,
       'appid': apiKey

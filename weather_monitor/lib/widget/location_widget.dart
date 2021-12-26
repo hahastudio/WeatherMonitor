@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weather_monitor/util/constants.dart';
 
 class LocationWidget extends StatelessWidget {
   final double longitude;
@@ -15,7 +16,7 @@ class LocationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String cityName = this.city;
-    if (cityName.startsWith('::geolocation_'))
+    if (cityName.startsWith(Constants.GpsPrefix))
       cityName = cityName.substring(14);
 
     return Center(

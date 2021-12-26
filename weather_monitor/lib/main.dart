@@ -3,7 +3,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -18,24 +17,22 @@ import 'location_service.dart';
 import 'notification_service.dart';
 import 'repository/repositories.dart';
 import 'simple_bloc_observer.dart';
+import 'util/constants.dart';
 import 'widget/widgets.dart';
 
 Future main() async {
-  print('[Main] app launched');
-  await dotenv.load(fileName: ".env");
-  final prefs = await SharedPreferences.getInstance();
-  String city = prefs.getString('city') ?? '';
-  await Settings.init(cacheProvider: SharePreferenceCache());
   // needed if you intend to initialize in the `main` function
   WidgetsFlutterBinding.ensureInitialized();
+  print('[Main] app launched');
+  final prefs = await SharedPreferences.getInstance();
+  String city = prefs.getString(Constants.CitySettingKey) ?? '';
+  await Settings.init(cacheProvider: SharePreferenceCache());
 
   final WeatherRepository weatherRepository = WeatherRepository(
     OpenWeatherMapWeatherApi(
-      apiKey: dotenv.env['OPENWEATHERMAP_API_KEY'],
       httpClient: HttpRetryClient(http.Client())
     ),
-    ColorfulCloudWeatherApi(
-      apiKey: dotenv.env['COLORFULCLOUD_API_KEY'],
+    ColorfulCloudsWeatherApi(
       httpClient: HttpRetryClient(http.Client())
     )
   );
@@ -43,7 +40,7 @@ Future main() async {
   GetIt.instance.registerSingleton<WeatherBloc>(weatherBloc);
 
   await NotificationService().init();
-  if ((city != null) && (city.startsWith('::geolocation_'))) {
+  if ((city != null) && (city.startsWith(Constants.GpsPrefix))) {
     await LocationService().init();
   }
   await BackgroundService().init();
@@ -60,18 +57,17 @@ Future main() async {
       var task = data.toString();
       final prefs = await SharedPreferences.getInstance();
       await prefs.reload();
-      String city = prefs.getString('city') ?? '';
       switch (task) {
         case 'WeatherRequested':
-          if (city != '')
+          if (await WeatherBloc.IsInitialized())
             weatherBloc.add(WeatherRequested(city: city));
           break;
         case 'WeatherRefreshRequested':
-          if (city != '')
+          if (await WeatherBloc.IsInitialized())
             weatherBloc.add(WeatherRefreshRequested(city: city));
           break;
         case 'WeatherBackgroundRefreshRequested':
-          if (city != '')
+          if (await WeatherBloc.IsInitialized())
             weatherBloc.add(WeatherBackgroundRefreshRequested(city: city));
       }
       print('[Main][backgroundCallbackChannel listener] finished processing $data');

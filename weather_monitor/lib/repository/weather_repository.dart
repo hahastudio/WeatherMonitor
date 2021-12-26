@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_monitor/api/apis.dart';
 import 'package:weather_monitor/model/models.dart';
 import 'package:weather_monitor/notification_service.dart';
+import 'package:weather_monitor/util/constants.dart';
 
 class WeatherRepository {
   final WeatherApi weatherApi;
@@ -17,8 +18,8 @@ class WeatherRepository {
     print('[WeatherRepository] start to getOverAllWeather');
     var weather = await weatherApi.getOverAllWeather(location);
 
-    if ((city != null) && (city.startsWith('::geolocation_'))) {
-      weather.city = '::geolocation_' + weather.city;
+    if ((city != null) && (city.startsWith(Constants.GpsPrefix))) {
+      weather.city = Constants.GpsPrefix + weather.city;
     } else {
       weather.city = city;
     }
@@ -41,11 +42,11 @@ class WeatherRepository {
 
     if (weather != null) {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('weather', jsonEncode(weather.toJson()));
+      await prefs.setString(Constants.WeatherSettingKey, jsonEncode(weather.toJson()));
       print('[WeatherRepository] weather refreshed on ${weather.current.dt} stored.');
 
       if ((weather.alerts != null) && (weather.alerts.length > 0)) {
-        List<String> alertJsons = prefs.getStringList('weatherAlerts');
+        List<String> alertJsons = prefs.getStringList(Constants.WeatherAlertsSettingKey);
         List<WeatherAlert> alertsSaved = [];
         if ((alertJsons != null) && (alertJsons.length > 0)) {
           for (final alertJson in alertJsons) {
@@ -69,7 +70,7 @@ class WeatherRepository {
         List<WeatherAlert> alertsToSave = alertsSaved + alertsToSend;
         alertsToSave.removeWhere((element) => element.start.isBefore(DateTime.now().add(Duration(days: -7))));
         List<String> alertsToSaveJsons = alertsToSave.map((element) => jsonEncode(element.toJson())).toList();
-        await prefs.setStringList('weatherAlerts', alertsToSaveJsons);
+        await prefs.setStringList(Constants.WeatherAlertsSettingKey, alertsToSaveJsons);
       }
     }
     

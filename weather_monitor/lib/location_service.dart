@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weather_monitor/util/constants.dart';
 import 'model/city.dart' as cityModel;
 
 class LocationService {
@@ -86,8 +87,8 @@ class LocationService {
 
     print('[LocationService] got current location');
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('city.coordinate.latitude', position.latitude);
-    await prefs.setDouble('city.coordinate.longitude', position.longitude);
+    await prefs.setDouble(Constants.LatitudeSettingKey, position.latitude);
+    await prefs.setDouble(Constants.LongitudeSettingKey, position.longitude);
     print('[LocationService] saved to shared preferences');
     return cityModel.Location(latitude: position.latitude, longitude: position.longitude);
   }
@@ -140,8 +141,8 @@ class LocationService {
         try {
           print('[LocationService] location changed');
           final SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setDouble('city.coordinate.latitude', position.latitude);
-          await prefs.setDouble('city.coordinate.longitude', position.longitude);
+          await prefs.setDouble(Constants.LatitudeSettingKey, position.latitude);
+          await prefs.setDouble(Constants.LongitudeSettingKey, position.longitude);
         } catch (e) {
           print('[LocationService] $e');
         }
