@@ -72,7 +72,7 @@ class WeatherDetailsWidget extends StatelessWidget {
                       child: Icon(WeatherIcons.snow, size: 15),
                     ),
                     SizedBox(width: 10),
-                    Text('Rain: ${this.weather.snowVolumes.volume['1h']} mm in 1h',
+                    Text('Snow: ${this.weather.snowVolumes.volume['1h']} mm in 1h',
                       style: TextStyle(
                         fontSize: 16,
                         color: Theme.of(context).textTheme.bodyText1.color,
@@ -91,7 +91,7 @@ class WeatherDetailsWidget extends StatelessWidget {
                       child: Icon(WeatherIcons.snow, size: 15),
                     ),
                     SizedBox(width: 10),
-                    Text('Rain: ${this.weather.snow} mm',
+                    Text('Snow: ${this.weather.snow} mm',
                       style: TextStyle(
                         fontSize: 16,
                         color: Theme.of(context).textTheme.bodyText1.color,
