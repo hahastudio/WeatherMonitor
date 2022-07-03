@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:weather_monitor/model/models.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -22,12 +25,26 @@ class WindMapState extends State<WindMapWidget> {
 
   @override
   Widget build(BuildContext context) {
-
+    var url = 'https://earth.nullschool.net/#current/wind/surface/level/orthographic=${widget.location.longitude.toStringAsFixed(3)},${widget.location.latitude.toStringAsFixed(3)},1000';
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text(
-          "Wind Map",
+        TextButton.icon(
+          style: TextButton.styleFrom(
+            textStyle: const TextStyle(fontSize: 15),
+          ),
+          onPressed: () async {
+            if (await canLaunchUrlString(url)){
+              await launchUrlString(url, mode: LaunchMode.externalApplication);
+            } else {
+              // can't launch url
+            }
+          },
+          icon: Icon(
+            CupertinoIcons.arrow_up_left_square,
+            size: 15,
+          ),
+          label: Text('Wind Map'),
         ),
         Container(
           padding: EdgeInsets.all(15),
@@ -35,7 +52,7 @@ class WindMapState extends State<WindMapWidget> {
           child: WebView(
             javascriptMode: JavascriptMode.unrestricted,
             zoomEnabled: true,
-            initialUrl: 'https://earth.nullschool.net/#current/wind/surface/level/orthographic=${widget.location.longitude.toStringAsFixed(3)},${widget.location.latitude.toStringAsFixed(3)},1000',
+            initialUrl: url,
           ),
         ),
       ],

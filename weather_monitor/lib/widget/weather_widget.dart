@@ -36,7 +36,7 @@ class _WeatherWidgetState extends State<WeatherWidget> {
       BlocProvider.of<WeatherBloc>(context)
           .add(WeatherInitiated(city: city));
     // theme
-    int themeMode = Settings.getValue<int>('settings.themeMode', 0);
+    int themeMode = Settings.getValue<int>('settings.themeMode', defaultValue: 0);
     BlocProvider.of<ThemeBloc>(context)
         .add(ThemeEvent(appTheme: AppTheme.values[themeMode]));
   }
