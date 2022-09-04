@@ -131,7 +131,7 @@ class WeatherDetailsWidget extends StatelessWidget {
                 )
               ),
               ConditionalWidget(
-                  condition: this.weather.wind.gust > 0,
+                  condition: (this.weather.wind.gust != null) && (this.weather.wind.gust > 0),
                   widgetBuilder: (context) => Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [

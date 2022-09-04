@@ -12,6 +12,7 @@ export 'forecast_hourly_horizontal_widget.dart';
 export 'forecast_daily_horizontal_widget.dart';
 export 'temperature_line_chart.dart';
 export 'rain_line_chart.dart';
+export 'pressure_line_chart.dart';
 export 'wind_line_chart.dart';
 export 'settings_list_widget.dart';
 export 'wind_map_widget.dart';

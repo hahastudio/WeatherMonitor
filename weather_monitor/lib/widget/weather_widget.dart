@@ -149,6 +149,16 @@ class _WeatherWidgetState extends State<WeatherWidget> {
                       ),
                       padding: EdgeInsets.all(10),
                     ),
+                    PressureLineChart(
+                      weather.hourly,
+                      animate: true,
+                    ),
+                    Padding(
+                      child: Divider(
+                          color: Theme.of(context).textTheme.bodyText2.color
+                      ),
+                      padding: EdgeInsets.all(10),
+                    ),
                     WindLineChart(
                       weather.hourly,
                       animate: true,
