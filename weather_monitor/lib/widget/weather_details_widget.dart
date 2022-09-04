@@ -131,6 +131,24 @@ class WeatherDetailsWidget extends StatelessWidget {
                 )
               ),
               ConditionalWidget(
+                  condition: this.weather.wind.gust > 0,
+                  widgetBuilder: (context) => Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Container(
+                        margin: EdgeInsets.only(left: 15, bottom: 5)
+                      ),
+                      SizedBox(width: 10),
+                      Text('Gust: ${(this.weather.wind.gust * 3.6).toStringAsFixed(2)} km/h',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(context).textTheme.bodyText1.color,
+                          )
+                      )
+                    ],
+                  )
+              ),
+              ConditionalWidget(
                 condition: this.weather.wind.speed != null,
                 widgetBuilder: (context) =>  SizedBox(height: 10),
               ),

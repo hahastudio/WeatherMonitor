@@ -337,6 +337,15 @@ class Wind {
     return sectors[pos];
   }
 
+  String toString() {
+    var result = '${(this.speed * 3.6).toStringAsFixed(2)} km/h';
+    result += ', ${this.getDirection()}';
+    if (this.gust > 0) {
+      result += '\ngust ${this.gust * 3.6} km/h';
+    }
+    return result;
+  }
+
   /// Convert Json to Wind
   static Wind fromJson(Map<String, dynamic> json) {
     return Wind(
