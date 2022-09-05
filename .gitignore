@@ -88,3 +88,4 @@ lint/tmp/
 Design/
 *.pcap
 weather_monitor/.env
+.vscode/settings.json

@@ -67,9 +67,7 @@ class BackgroundService {
       weatherRefreshPeriodicTask,
       initialDelay: Duration(minutes: 1),
       frequency: Duration(minutes: 15),
-      constraints: Constraints(
-        networkType: NetworkType.connected
-      )
+      existingWorkPolicy: ExistingWorkPolicy.append
     );
     print("[Background] $weatherRefreshPeriodicTask registered.");
   }

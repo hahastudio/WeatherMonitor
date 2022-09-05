@@ -41,7 +41,14 @@ class PressureLineChart extends StatelessWidget {
                       tickProviderSpec: new charts.BasicNumericTickProviderSpec(
                           zeroBound: false
                       )
-                  )
+                  ),
+                  behaviors: [
+                    new charts.RangeAnnotation([
+                      new charts.LineAnnotationSegment(
+                        1013.25, charts.RangeAnnotationAxisType.measure,
+                        startLabel: 'Sea Lv.')
+                    ]),
+                  ],
               )
           ),
         )
