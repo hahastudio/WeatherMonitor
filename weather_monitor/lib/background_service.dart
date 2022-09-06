@@ -13,6 +13,7 @@ import 'repository/repositories.dart';
 // task type
 const weatherRefreshPeriodicTask = "weatherRefreshPeriodicTask";
 
+@pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {
