@@ -7,6 +7,7 @@ import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weather_monitor/api/openstreetmap_api.dart';
 import 'package:weather_monitor/model/theme.dart';
 import 'package:weather_monitor/util/extend_http_client.dart';
 
@@ -34,7 +35,10 @@ Future main() async {
     ),
     ColorfulCloudsWeatherApi(
       httpClient: HttpRetryClient(http.Client())
-    )
+    ),
+    OpenStreetMapApi(
+      httpClient: HttpRetryClient(http.Client())
+    ),
   );
   var weatherBloc = WeatherBloc(weatherRepository: weatherRepository);
   GetIt.instance.registerSingleton<WeatherBloc>(weatherBloc);

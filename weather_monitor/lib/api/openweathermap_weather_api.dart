@@ -6,7 +6,7 @@ import 'package:weather_monitor/model/models.dart';
 import 'package:weather_monitor/util/constants.dart';
 import 'package:weather_monitor/util/extend_http_client.dart';
 
-class OpenWeatherMapWeatherApi extends WeatherApi {
+class OpenWeatherMapWeatherApi implements WeatherApi, GeocodingApi {
 
   static const endPointHost = 'api.openweathermap.org';
   static const endPointPrefix = '/data/2.5';
@@ -67,12 +67,11 @@ class OpenWeatherMapWeatherApi extends WeatherApi {
     }
 
     var overAllWeather = OverAllWeather.fromJson(jsonDecode(response.body));
-    var city = await getCityName(location);
-    overAllWeather.city = city;
 
     return overAllWeather;
   }
 
+  @override
   Future<String> getCityName(Location location) async {
     var apiKey = await _getApiKey();
     if (apiKey == '')

@@ -9,7 +9,9 @@ import 'package:weather_monitor/util/constants.dart';
 class WeatherRepository {
   final WeatherApi weatherApi;
   final WeatherSubApi weatherSubApi;
-  WeatherRepository(this.weatherApi, this.weatherSubApi);
+  final GeocodingApi geocodingApi;
+
+  WeatherRepository(this.weatherApi, this.weatherSubApi, this.geocodingApi);
 
   Future<OverAllWeather> getOverAllWeather(String city) async {
     print('[WeatherRepository] start to get OverAllWeather');
@@ -17,9 +19,10 @@ class WeatherRepository {
     var location = await weatherApi.getLocation(city);
     print('[WeatherRepository] start to getOverAllWeather');
     var weather = await weatherApi.getOverAllWeather(location);
-
+    print('[WeatherRepository] start to getCityName');
     if ((city != null) && (city.startsWith(Constants.GpsPrefix))) {
-      weather.city = Constants.GpsPrefix + weather.city;
+      final locationName = await geocodingApi.getCityName(location);
+      weather.city = Constants.GpsPrefix + locationName;
     } else {
       weather.city = city;
     }

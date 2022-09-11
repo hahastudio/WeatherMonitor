@@ -15,6 +15,7 @@ It uses [Flutter framework](https://flutter.dev/), and uses [BLoC pattern](https
 
 - [OpenWeather API](https://openweathermap.org/api)
 - [Colorful Clouds API](https://open.caiyunapp.com/ColorfulClouds_Weather_API)
+- [Nominatim from OSM data](https://nominatim.org/release-docs/develop/api/Overview/)
 - [earth.nullschool.net](https://earth.nullschool.net/)
 
 ## How to build
@@ -42,3 +43,7 @@ Weather Glyph Font:
 ## License
 
 Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
+
+About OSM Data:
+
+Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright

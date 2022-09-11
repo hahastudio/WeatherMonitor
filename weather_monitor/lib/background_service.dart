@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart' as Foundation;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:weather_monitor/api/openstreetmap_api.dart';
 import 'package:weather_monitor/util/constants.dart';
 import 'package:weather_monitor/util/extend_http_client.dart';
 import 'package:workmanager/workmanager.dart';
@@ -19,12 +20,15 @@ void callbackDispatcher() {
     try {
       print('[Background] background task started.');
       final WeatherRepository weatherRepository = WeatherRepository(
-          OpenWeatherMapWeatherApi(
-              httpClient: HttpRetryClient(http.Client())
-          ),
-          ColorfulCloudsWeatherApi(
-              httpClient: HttpRetryClient(http.Client())
-          )
+        OpenWeatherMapWeatherApi(
+          httpClient: HttpRetryClient(http.Client())
+        ),
+        ColorfulCloudsWeatherApi(
+          httpClient: HttpRetryClient(http.Client())
+        ),
+        OpenStreetMapApi(
+          httpClient: HttpRetryClient(http.Client())
+        ),
       );
       await NotificationService().init();
       final SharedPreferences prefs = await SharedPreferences.getInstance();
