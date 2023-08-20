@@ -38,7 +38,7 @@ class OpenStreetMapApi implements GeocodingApi {
       throw Exception('error retrieving city name: status ${response.statusCode}');
     }
     try {
-      final result = jsonDecode(response.body);
+      final result = jsonDecode(utf8.decode(response.bodyBytes));
       if (result['address'] == null)
         return unknownCityName;
       if (result['address']['town'] != null)
