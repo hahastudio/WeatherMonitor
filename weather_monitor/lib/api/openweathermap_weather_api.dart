@@ -58,7 +58,7 @@ class OpenWeatherMapWeatherApi implements WeatherApi, GeocodingApi {
       'exclude': 'minutely',
       'appid': apiKey
     };
-    final uri = Uri.https(endPointHost, endPointPrefix + '/onecall', queryParameters);
+    final uri = Uri.https(endPointHost,  '/data/3.0/onecall', queryParameters);
     print('[OpenWeatherMapApi] getOverAllWeather requested');
     var response = await this.httpClient.get(uri, headers: defaultHeader);
     print('[OpenWeatherMapApi] getOverAllWeather responded');
