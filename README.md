@@ -14,6 +14,7 @@ It uses [Flutter framework](https://flutter.dev/), and uses [BLoC pattern](https
 ## Weather services
 
 - [OpenWeather API](https://openweathermap.org/api)
+  - Update: This app will use One Call API 3.0, so a subscription API is required. Check official document [here](https://openweathermap.org/api/one-call-3).
 - [Colorful Clouds API](https://open.caiyunapp.com/ColorfulClouds_Weather_API)
 - [Nominatim from OSM data](https://nominatim.org/release-docs/develop/api/Overview/)
 - [earth.nullschool.net](https://earth.nullschool.net/)
