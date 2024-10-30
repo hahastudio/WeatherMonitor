@@ -31,11 +31,40 @@ class HttpRetryClient extends http.BaseClient {
     final r = RetryOptions(maxAttempts: 3);
     final response = await r.retry(
       // Make a GET request
-          () => _inner.send(request).timeout(Duration(seconds: 60)),
+          () => _inner.send(_copyRequest(request)).timeout(Duration(seconds: 60)),
       // Retry on SocketException or TimeoutException
       retryIf: (e) => e is SocketException || e is TimeoutException || e is HttpException,
     );
 
     return response;
+  }
+
+  http.BaseRequest _copyRequest(http.BaseRequest request) {
+    http.BaseRequest requestCopy;
+
+    if(request is http.Request) {
+      requestCopy = http.Request(request.method, request.url)
+        ..encoding = request.encoding
+        ..bodyBytes = request.bodyBytes;
+    }
+    else if(request is http.MultipartRequest) {
+      requestCopy = http.MultipartRequest(request.method, request.url)
+        ..fields.addAll(request.fields)
+        ..files.addAll(request.files);
+    }
+    else if(request is http.StreamedRequest) {
+      throw Exception('copying streamed requests is not supported');
+    }
+    else {
+      throw Exception('request type is unknown, cannot copy');
+    }
+
+    requestCopy
+      ..persistentConnection = request.persistentConnection
+      ..followRedirects = request.followRedirects
+      ..maxRedirects = request.maxRedirects
+      ..headers.addAll(request.headers);
+
+    return requestCopy;
   }
 }
